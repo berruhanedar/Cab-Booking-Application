@@ -4,5 +4,5 @@ import com.berru.app.cabbookingapplication.dto.ContactFormResponseDTO;
 import com.berru.app.cabbookingapplication.dto.NewContactFormRequestDTO;
 
 public interface ContactFormService {
-    public ContactFormResponseDTO saveContactForm(NewContactFormRequestDTO newContactFormRequestDTO);
+    ContactFormResponseDTO saveContactForm(NewContactFormRequestDTO newContactFormRequestDTO);
 }
