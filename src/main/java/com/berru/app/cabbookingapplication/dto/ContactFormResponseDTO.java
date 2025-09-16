@@ -1,5 +1,8 @@
 package com.berru.app.cabbookingapplication.dto;
 
+import lombok.Data;
+
+@Data
 public class ContactFormResponseDTO {
 
     private Integer id;
