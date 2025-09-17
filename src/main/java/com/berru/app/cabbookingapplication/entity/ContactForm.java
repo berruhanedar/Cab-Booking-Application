@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 @Data
 @NoArgsConstructor
 @Entity
+@Table(name = "contact_form")
 public class ContactForm {
 
     @Id
