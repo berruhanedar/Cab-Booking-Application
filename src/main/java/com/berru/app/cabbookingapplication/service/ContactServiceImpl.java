@@ -10,12 +10,12 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ContactFormServiceImpl implements ContactFormService {
+public class ContactServiceImpl implements ContactService {
 
     private final ContactFormRepository contactFormRepository;
     private final ContactFormMapper contactFormMapper;
 
-    public ContactFormServiceImpl(ContactFormRepository contactFormRepository, ContactFormMapper contactFormMapper) {
+    public ContactServiceImpl(ContactFormRepository contactFormRepository, ContactFormMapper contactFormMapper) {
         this.contactFormRepository = contactFormRepository;
         this.contactFormMapper = contactFormMapper;
     }

@@ -2,7 +2,7 @@ package com.berru.app.cabbookingapplication.controller;
 
 import com.berru.app.cabbookingapplication.dto.ContactFormResponseDTO;
 import com.berru.app.cabbookingapplication.dto.NewContactFormRequestDTO;
-import com.berru.app.cabbookingapplication.service.ContactFormServiceImpl;
+import com.berru.app.cabbookingapplication.service.ContactServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(("/api/contact-form"))
-public class ContactFormController {
+public class ContactController {
 
-    private final ContactFormServiceImpl contactFormServiceImpl;
+    private final ContactServiceImpl contactFormServiceImpl;
 
-    public ContactFormController(ContactFormServiceImpl contactFormServiceImpl) {
+    public ContactController(ContactServiceImpl contactFormServiceImpl) {
         this.contactFormServiceImpl = contactFormServiceImpl;
     }
 
