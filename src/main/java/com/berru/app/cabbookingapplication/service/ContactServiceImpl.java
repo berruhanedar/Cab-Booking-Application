@@ -2,8 +2,11 @@ package com.berru.app.cabbookingapplication.service;
 
 import com.berru.app.cabbookingapplication.dto.ContactFormResponseDTO;
 import com.berru.app.cabbookingapplication.dto.NewContactFormRequestDTO;
+import com.berru.app.cabbookingapplication.dto.PaginationResponse;
+import com.berru.app.cabbookingapplication.dto.UpdateContactFormRequestDTO;
 import com.berru.app.cabbookingapplication.entity.ContactForm;
 import com.berru.app.cabbookingapplication.exception.DuplicateEmailException;
+import com.berru.app.cabbookingapplication.exception.ResourceNotFoundException;
 import com.berru.app.cabbookingapplication.mapper.ContactFormMapper;
 import com.berru.app.cabbookingapplication.repository.ContactFormRepository;
 import jakarta.transaction.Transactional;
@@ -31,4 +34,28 @@ public class ContactServiceImpl implements ContactService {
         ContactForm savedContactForm = contactFormRepository.save(contactForm);
         return contactFormMapper.toContactFormResponseDTO(savedContactForm);
     }
+
+    @Override
+    @Transactional
+    public ContactFormResponseDTO getContactFormById(Integer id) {
+        ContactForm contactForm = contactFormRepository.findById(id)
+                .orElseThrow(()-> new ResourceNotFoundException("Contact Form not found with id "+id));
+        return contactFormMapper.toContactFormResponseDTO(contactForm);
+    }
+
+    @Override
+    public PaginationResponse<ContactFormResponseDTO> listPaginated(int pageNo, int size) {
+        return null;
+    }
+
+    @Override
+    public ContactFormResponseDTO updateContactForm(Integer id, UpdateContactFormRequestDTO updateContactFormRequestDTO) {
+        return null;
+    }
+
+    @Override
+    public void deleteContactFormById(Integer id) {
+
+    }
+
 }

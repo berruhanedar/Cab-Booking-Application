@@ -10,10 +10,10 @@ public interface ContactService {
 
     ContactFormResponseDTO getContactFormById(Integer id);
 
+    PaginationResponse<ContactFormResponseDTO> listPaginated(int pageNo, int size);
+
     ContactFormResponseDTO updateContactForm(Integer id, UpdateContactFormRequestDTO updateContactFormRequestDTO);
 
     void deleteContactFormById(Integer id);
-
-    PaginationResponse<ContactFormResponseDTO> listPaginated(int pageNo, int size);
 
 }
