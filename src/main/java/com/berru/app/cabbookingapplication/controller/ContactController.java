@@ -3,6 +3,7 @@ package com.berru.app.cabbookingapplication.controller;
 import com.berru.app.cabbookingapplication.dto.ContactFormResponseDTO;
 import com.berru.app.cabbookingapplication.dto.NewContactFormRequestDTO;
 import com.berru.app.cabbookingapplication.dto.PaginationResponse;
+import com.berru.app.cabbookingapplication.dto.UpdateContactFormRequestDTO;
 import com.berru.app.cabbookingapplication.service.ContactServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -37,6 +38,12 @@ public class ContactController {
             @RequestParam(defaultValue = "10") int pageSize) {
         PaginationResponse<ContactFormResponseDTO> paginationResponse = contactFormServiceImpl.listPaginated(pageNo, pageSize);
         return ResponseEntity.ok(paginationResponse);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ContactFormResponseDTO> updateContactForm(@PathVariable Integer id , @RequestBody @Valid UpdateContactFormRequestDTO updateContactFormRequestDTO){
+        ContactFormResponseDTO contactFormResponseDTO = contactFormServiceImpl.updateContactForm(id,updateContactFormRequestDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(contactFormResponseDTO);
     }
 
 
