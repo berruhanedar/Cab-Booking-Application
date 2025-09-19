@@ -10,7 +10,13 @@ import com.berru.app.cabbookingapplication.exception.ResourceNotFoundException;
 import com.berru.app.cabbookingapplication.mapper.ContactFormMapper;
 import com.berru.app.cabbookingapplication.repository.ContactFormRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ContactServiceImpl implements ContactService {
@@ -44,8 +50,23 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
+    @Transactional
     public PaginationResponse<ContactFormResponseDTO> listPaginated(int pageNo, int size) {
-        return null;
+        Pageable pageable = PageRequest.of(pageNo, size);
+
+        Page<ContactForm> contactFormPage = contactFormRepository.findAll(pageable);
+
+        List<ContactFormResponseDTO> contactFormResponseDTOList = contactFormPage.getContent().stream()
+                .map(contactFormMapper::toContactFormResponseDTO)
+                .collect(Collectors.toList());
+
+        return PaginationResponse.<ContactFormResponseDTO>builder()
+                .content(contactFormResponseDTOList)
+                .pageNo(contactFormPage.getNumber())
+                .pageSize(contactFormPage.getSize())
+                .totalElements(contactFormPage.getTotalElements())
+                .isLast(contactFormPage.isLast())
+                .build();
     }
 
     @Override
