@@ -41,11 +41,14 @@ public class ContactController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ContactFormResponseDTO> updateContactForm(@PathVariable Integer id , @RequestBody @Valid UpdateContactFormRequestDTO updateContactFormRequestDTO){
-        ContactFormResponseDTO contactFormResponseDTO = contactFormServiceImpl.updateContactForm(id,updateContactFormRequestDTO);
+    public ResponseEntity<ContactFormResponseDTO> updateContactForm(@PathVariable Integer id, @RequestBody @Valid UpdateContactFormRequestDTO updateContactFormRequestDTO) {
+        ContactFormResponseDTO contactFormResponseDTO = contactFormServiceImpl.updateContactForm(id, updateContactFormRequestDTO);
         return ResponseEntity.status(HttpStatus.OK).body(contactFormResponseDTO);
     }
 
-
-
+    @DeleteMapping
+    public ResponseEntity<Void> deleteContactFormById(@RequestParam Integer id) {
+        contactFormServiceImpl.deleteContactFormById(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+}
