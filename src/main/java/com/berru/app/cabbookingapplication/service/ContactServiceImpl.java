@@ -71,7 +71,10 @@ public class ContactServiceImpl implements ContactService {
 
     @Override
     public ContactFormResponseDTO updateContactForm(Integer id, UpdateContactFormRequestDTO updateContactFormRequestDTO) {
-        return null;
+        ContactForm existingContactForm = contactFormRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Contact Form not found with id "+id));
+        contactFormMapper.updateContactFormFromDTO(updateContactFormRequestDTO, existingContactForm);
+        ContactForm savedContactForm = contactFormRepository.save(existingContactForm);
+        return contactFormMapper.toContactFormResponseDTO(savedContactForm);
     }
 
     @Override
