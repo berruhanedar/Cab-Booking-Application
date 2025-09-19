@@ -46,8 +46,8 @@ public class ContactController {
         return ResponseEntity.status(HttpStatus.OK).body(contactFormResponseDTO);
     }
 
-    @DeleteMapping
-    public ResponseEntity<Void> deleteContactFormById(@RequestParam Integer id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteContactFormById(@PathVariable Integer id) {
         contactFormServiceImpl.deleteContactFormById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
