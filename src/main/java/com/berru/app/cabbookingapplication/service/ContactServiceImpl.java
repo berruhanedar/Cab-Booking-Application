@@ -70,6 +70,7 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
+    @Transactional
     public ContactFormResponseDTO updateContactForm(Integer id, UpdateContactFormRequestDTO updateContactFormRequestDTO) {
         ContactForm existingContactForm = contactFormRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Contact Form not found with id "+id));
         contactFormMapper.updateContactFormFromDTO(updateContactFormRequestDTO, existingContactForm);
@@ -78,8 +79,10 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
+    @Transactional
     public void deleteContactFormById(Integer id) {
-
+        ContactForm contactForm = contactFormRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Contact Form not found with id "+id));
+        contactFormRepository.delete(contactForm);
     }
 
 }
