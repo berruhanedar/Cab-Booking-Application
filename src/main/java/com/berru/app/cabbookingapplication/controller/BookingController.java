@@ -46,8 +46,9 @@ public class BookingController {
         return ResponseEntity.status(HttpStatus.OK).body(bookingFormResponseDTO);
     }
 
-
-
-
-
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteBooking(@PathVariable Integer id) {
+        bookingServiceImpl.deleteBookingById(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }
