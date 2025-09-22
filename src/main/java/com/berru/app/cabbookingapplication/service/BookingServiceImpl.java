@@ -1,8 +1,6 @@
 package com.berru.app.cabbookingapplication.service;
 
-import com.berru.app.cabbookingapplication.dto.BookingFormResponseDTO;
-import com.berru.app.cabbookingapplication.dto.NewBookingFormRequestDTO;
-import com.berru.app.cabbookingapplication.dto.PaginationResponse;
+import com.berru.app.cabbookingapplication.dto.*;
 import com.berru.app.cabbookingapplication.entity.BookingForm;
 import com.berru.app.cabbookingapplication.exception.ResourceNotFoundException;
 import com.berru.app.cabbookingapplication.mapper.BookingFormMapper;
@@ -62,5 +60,14 @@ public class BookingServiceImpl implements BookingService {
                 .totalElements(bookingFormPage.getTotalElements())
                 .isLast(bookingFormPage.isLast())
                 .build();
+    }
+
+    @Override
+    @Transactional
+    public BookingFormResponseDTO updateBooking(Integer id, UpdateBookingFormRequestDTO updateBookingFormRequestDTO) {
+        BookingForm existingBookingForm = bookingFormRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Booking Form not found with id " + id));
+        bookingFormMapper.updateBookingFormFromDTO(updateBookingFormRequestDTO, existingBookingForm);
+        BookingForm bookingForm = bookingFormRepository.save(existingBookingForm);
+        return bookingFormMapper.toBookingFormResponseDTO(bookingForm);
     }
 }
