@@ -5,8 +5,6 @@ import com.berru.app.cabbookingapplication.dto.NewBookingFormRequestDTO;
 import com.berru.app.cabbookingapplication.dto.PaginationResponse;
 import com.berru.app.cabbookingapplication.dto.UpdateBookingFormRequestDTO;
 
-import java.awt.print.Book;
-
 public interface BookingService {
 
     BookingFormResponseDTO createBooking(NewBookingFormRequestDTO newBookingFormRequestDTO);
@@ -17,4 +15,5 @@ public interface BookingService {
 
     BookingFormResponseDTO updateBooking(Integer id , UpdateBookingFormRequestDTO updateBookingFormRequestDTO);
 
+    void deleteBookingById(Integer id);
 }

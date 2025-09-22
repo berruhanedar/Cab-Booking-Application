@@ -70,4 +70,11 @@ public class BookingServiceImpl implements BookingService {
         BookingForm bookingForm = bookingFormRepository.save(existingBookingForm);
         return bookingFormMapper.toBookingFormResponseDTO(bookingForm);
     }
+
+    @Override
+    @Transactional
+    public void deleteBookingById(Integer id) {
+        BookingForm bookingForm = bookingFormRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Booking Form not found with id " + id));
+        bookingFormRepository.delete(bookingForm);
+    }
 }
