@@ -3,12 +3,12 @@ package com.berru.app.cabbookingapplication.controller;
 import com.berru.app.cabbookingapplication.dto.BookingFormResponseDTO;
 import com.berru.app.cabbookingapplication.dto.NewBookingFormRequestDTO;
 import com.berru.app.cabbookingapplication.dto.PaginationResponse;
+import com.berru.app.cabbookingapplication.dto.UpdateBookingFormRequestDTO;
 import com.berru.app.cabbookingapplication.service.BookingServiceImpl;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/booking")
@@ -21,7 +21,7 @@ public class BookingController {
     }
 
     @PostMapping
-    public ResponseEntity<BookingFormResponseDTO> createBooking(NewBookingFormRequestDTO newBookingFormRequestDTO) {
+    public ResponseEntity<BookingFormResponseDTO> createBooking(@RequestBody @Valid NewBookingFormRequestDTO newBookingFormRequestDTO) {
         BookingFormResponseDTO bookingFormResponseDTO = bookingServiceImpl.createBooking(newBookingFormRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(bookingFormResponseDTO);
     }
@@ -39,5 +39,15 @@ public class BookingController {
         PaginationResponse<BookingFormResponseDTO> paginationResponse = bookingServiceImpl.listPaginated(pageNo, pageSize);
         return ResponseEntity.ok(paginationResponse);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<BookingFormResponseDTO> updateBooking(@PathVariable Integer id , @RequestBody UpdateBookingFormRequestDTO updateBookingFormRequestDTO) {
+        BookingFormResponseDTO bookingFormResponseDTO = bookingServiceImpl.updateBooking(id,updateBookingFormRequestDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(bookingFormResponseDTO);
+    }
+
+
+
+
 
 }
