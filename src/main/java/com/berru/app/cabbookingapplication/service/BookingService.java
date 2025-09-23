@@ -5,6 +5,8 @@ import com.berru.app.cabbookingapplication.dto.NewBookingFormRequestDTO;
 import com.berru.app.cabbookingapplication.dto.PaginationResponse;
 import com.berru.app.cabbookingapplication.dto.UpdateBookingFormRequestDTO;
 
+import java.util.List;
+
 public interface BookingService {
 
     BookingFormResponseDTO createBooking(NewBookingFormRequestDTO newBookingFormRequestDTO);
@@ -13,7 +15,10 @@ public interface BookingService {
 
     PaginationResponse<BookingFormResponseDTO> listPaginated(int pageNo, int pageSize);
 
+    List<BookingFormResponseDTO> searchBookingByRsql(String query);
+
     BookingFormResponseDTO updateBooking(Integer id , UpdateBookingFormRequestDTO updateBookingFormRequestDTO);
 
     void deleteBookingById(Integer id);
+
 }

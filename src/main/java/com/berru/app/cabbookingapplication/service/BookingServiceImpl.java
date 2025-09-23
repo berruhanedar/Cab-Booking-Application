@@ -5,10 +5,15 @@ import com.berru.app.cabbookingapplication.entity.BookingForm;
 import com.berru.app.cabbookingapplication.exception.ResourceNotFoundException;
 import com.berru.app.cabbookingapplication.mapper.BookingFormMapper;
 import com.berru.app.cabbookingapplication.repository.BookingFormRepository;
+import com.berru.app.cabbookingapplication.rsql.CustomRsqlVisitor;
+import cz.jirutka.rsql.parser.RSQLParser;
+import cz.jirutka.rsql.parser.ast.Node;
 import jakarta.transaction.Transactional;
+import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,10 +24,12 @@ public class BookingServiceImpl implements BookingService {
 
     private final BookingFormRepository bookingFormRepository;
     private final BookingFormMapper bookingFormMapper;
+    private final ResourcePatternResolver resourcePatternResolver;
 
-    public BookingServiceImpl(BookingFormRepository bookingFormRepository, BookingFormMapper bookingFormMapper) {
+    public BookingServiceImpl(BookingFormRepository bookingFormRepository, BookingFormMapper bookingFormMapper, ResourcePatternResolver resourcePatternResolver) {
         this.bookingFormRepository = bookingFormRepository;
         this.bookingFormMapper = bookingFormMapper;
+        this.resourcePatternResolver = resourcePatternResolver;
     }
 
     @Override
@@ -63,6 +70,21 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    public List<BookingFormResponseDTO> searchBookingByRsql(String query) {
+        RSQLParser parser = new RSQLParser();
+        Node rootNode = parser.parse(query);
+
+        CustomRsqlVisitor<BookingForm> visitor = new CustomRsqlVisitor<>();
+        Specification<BookingForm> spec = rootNode.accept(visitor);
+
+
+        List<BookingForm> bookingForm = bookingFormRepository.findAll(spec);
+
+        return bookingForm.stream().map(bookingFormMapper::toBookingFormResponseDTO).collect(Collectors.toList());
+
+    }
+
+    @Override
     @Transactional
     public BookingFormResponseDTO updateBooking(Integer id, UpdateBookingFormRequestDTO updateBookingFormRequestDTO) {
         BookingForm existingBookingForm = bookingFormRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Booking Form not found with id " + id));
@@ -77,4 +99,5 @@ public class BookingServiceImpl implements BookingService {
         BookingForm bookingForm = bookingFormRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Booking Form not found with id " + id));
         bookingFormRepository.delete(bookingForm);
     }
+
 }
