@@ -70,6 +70,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    @Transactional
     public List<BookingFormResponseDTO> searchBookingByRsql(String query) {
         RSQLParser parser = new RSQLParser();
         Node rootNode = parser.parse(query);

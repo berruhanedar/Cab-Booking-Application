@@ -48,8 +48,6 @@ public class BookingController {
         return ResponseEntity.ok(bookingFormResponseDTOList);
     }
 
-
-
     @PutMapping("/{id}")
     public ResponseEntity<BookingFormResponseDTO> updateBooking(@PathVariable Integer id , @RequestBody UpdateBookingFormRequestDTO updateBookingFormRequestDTO) {
         BookingFormResponseDTO bookingFormResponseDTO = bookingServiceImpl.updateBooking(id,updateBookingFormRequestDTO);
