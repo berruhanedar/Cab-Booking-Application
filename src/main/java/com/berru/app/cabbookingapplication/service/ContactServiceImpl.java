@@ -9,10 +9,14 @@ import com.berru.app.cabbookingapplication.exception.DuplicateEmailException;
 import com.berru.app.cabbookingapplication.exception.ResourceNotFoundException;
 import com.berru.app.cabbookingapplication.mapper.ContactFormMapper;
 import com.berru.app.cabbookingapplication.repository.ContactFormRepository;
+import com.berru.app.cabbookingapplication.rsql.CustomRsqlVisitor;
+import cz.jirutka.rsql.parser.RSQLParser;
+import cz.jirutka.rsql.parser.ast.Node;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -71,6 +75,22 @@ public class ContactServiceImpl implements ContactService {
 
     @Override
     @Transactional
+    public List<ContactFormResponseDTO> searchContactFormByRsql(String query) {
+        RSQLParser parser = new RSQLParser();
+        Node rootNode = parser.parse(query);
+
+        CustomRsqlVisitor<ContactForm> visitor = new CustomRsqlVisitor<>();
+        Specification<ContactForm> spec = rootNode.accept(visitor);
+
+
+        List<ContactForm> contactForm = contactFormRepository.findAll(spec);
+
+        return contactForm.stream().map(contactFormMapper::toContactFormResponseDTO).collect(Collectors.toList());
+    }
+
+
+    @Override
+    @Transactional
     public ContactFormResponseDTO updateContactForm(Integer id, UpdateContactFormRequestDTO updateContactFormRequestDTO) {
         ContactForm existingContactForm = contactFormRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Contact Form not found with id "+id));
         contactFormMapper.updateContactFormFromDTO(updateContactFormRequestDTO, existingContactForm);
@@ -84,5 +104,4 @@ public class ContactServiceImpl implements ContactService {
         ContactForm contactForm = contactFormRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Contact Form not found with id "+id));
         contactFormRepository.delete(contactForm);
     }
-
 }
