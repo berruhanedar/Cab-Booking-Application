@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/booking")
 public class BookingController {
@@ -39,6 +41,14 @@ public class BookingController {
         PaginationResponse<BookingFormResponseDTO> paginationResponse = bookingServiceImpl.listPaginated(pageNo, pageSize);
         return ResponseEntity.ok(paginationResponse);
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<BookingFormResponseDTO>> search(@RequestParam String query) {
+        List<BookingFormResponseDTO> bookingFormResponseDTOList = bookingServiceImpl.searchBookingByRsql(query);
+        return ResponseEntity.ok(bookingFormResponseDTOList);
+    }
+
+
 
     @PutMapping("/{id}")
     public ResponseEntity<BookingFormResponseDTO> updateBooking(@PathVariable Integer id , @RequestBody UpdateBookingFormRequestDTO updateBookingFormRequestDTO) {
