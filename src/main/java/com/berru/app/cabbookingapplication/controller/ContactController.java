@@ -1,14 +1,13 @@
 package com.berru.app.cabbookingapplication.controller;
 
-import com.berru.app.cabbookingapplication.dto.ContactFormResponseDTO;
-import com.berru.app.cabbookingapplication.dto.NewContactFormRequestDTO;
-import com.berru.app.cabbookingapplication.dto.PaginationResponse;
-import com.berru.app.cabbookingapplication.dto.UpdateContactFormRequestDTO;
+import com.berru.app.cabbookingapplication.dto.*;
 import com.berru.app.cabbookingapplication.service.ContactServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(("/api/contact-form"))
@@ -44,6 +43,12 @@ public class ContactController {
     public ResponseEntity<ContactFormResponseDTO> updateContactForm(@PathVariable Integer id, @RequestBody @Valid UpdateContactFormRequestDTO updateContactFormRequestDTO) {
         ContactFormResponseDTO contactFormResponseDTO = contactFormServiceImpl.updateContactForm(id, updateContactFormRequestDTO);
         return ResponseEntity.status(HttpStatus.OK).body(contactFormResponseDTO);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<ContactFormResponseDTO>> search(@RequestParam String query) {
+        List<ContactFormResponseDTO> contactFormResponseDTO = contactFormServiceImpl.searchContactFormByRsql(query);
+        return ResponseEntity.ok(contactFormResponseDTO);
     }
 
     @DeleteMapping("/{id}")
