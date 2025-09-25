@@ -1,0 +1,59 @@
+package com.berru.app.cabbookingapplication.service;
+
+import com.berru.app.cabbookingapplication.dto.NewUserRequestDTO;
+import com.berru.app.cabbookingapplication.dto.PaginationResponse;
+import com.berru.app.cabbookingapplication.dto.UpdateUserRequestDTO;
+import com.berru.app.cabbookingapplication.dto.UserResponseDTO;
+import com.berru.app.cabbookingapplication.mapper.UserMapper;
+import com.berru.app.cabbookingapplication.repository.UserRepository;
+import org.springframework.stereotype.Service;
+
+import javax.management.relation.RoleStatus;
+import java.util.List;
+
+@Service
+public class UserServiceImpl implements UserService {
+
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
+
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper) {
+        this.userRepository = userRepository;
+        this.userMapper = userMapper;
+    }
+
+    @Override
+    public UserResponseDTO createUser(NewUserRequestDTO newUserRequestDTO) {
+        return null;
+    }
+
+    @Override
+    public UserResponseDTO getUserById(Integer id) {
+        return null;
+    }
+
+    @Override
+    public PaginationResponse<UserResponseDTO> listPaginated(int pageNo, int size) {
+        return null;
+    }
+
+    @Override
+    public List<UserResponseDTO> searchUserByRsql(String query) {
+        return List.of();
+    }
+
+    @Override
+    public UserResponseDTO updateUser(Integer id, UpdateUserRequestDTO updateUserRequestDTO) {
+        return null;
+    }
+
+    @Override
+    public void deleteUserById(Integer id) {
+
+    }
+
+    @Override
+    public UserResponseDTO changeUserRole(Integer id, RoleStatus newRole) {
+        return null;
+    }
+}
