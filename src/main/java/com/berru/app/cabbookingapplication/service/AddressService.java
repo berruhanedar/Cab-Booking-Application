@@ -1,9 +1,11 @@
 package com.berru.app.cabbookingapplication.service;
 
 import com.berru.app.cabbookingapplication.dto.*;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public interface AddressService {
 
     AddressResponseDTO saveUser(NewAddressRequestDTO newAddressRequestDTO);
