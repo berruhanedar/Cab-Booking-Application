@@ -1,7 +1,7 @@
 package com.berru.app.cabbookingapplication.controller;
 
 import com.berru.app.cabbookingapplication.dto.*;
-import com.berru.app.cabbookingapplication.service.ContactServiceImpl;
+import com.berru.app.cabbookingapplication.service.impl.ContactServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

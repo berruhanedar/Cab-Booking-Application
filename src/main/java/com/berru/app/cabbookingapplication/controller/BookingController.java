@@ -4,7 +4,7 @@ import com.berru.app.cabbookingapplication.dto.BookingFormResponseDTO;
 import com.berru.app.cabbookingapplication.dto.NewBookingFormRequestDTO;
 import com.berru.app.cabbookingapplication.dto.PaginationResponse;
 import com.berru.app.cabbookingapplication.dto.UpdateBookingFormRequestDTO;
-import com.berru.app.cabbookingapplication.service.BookingServiceImpl;
+import com.berru.app.cabbookingapplication.service.impl.BookingServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

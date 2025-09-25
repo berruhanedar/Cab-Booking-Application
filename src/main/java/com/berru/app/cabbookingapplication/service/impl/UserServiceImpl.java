@@ -1,4 +1,4 @@
-package com.berru.app.cabbookingapplication.service;
+package com.berru.app.cabbookingapplication.service.impl;
 
 import com.berru.app.cabbookingapplication.dto.NewUserRequestDTO;
 import com.berru.app.cabbookingapplication.dto.PaginationResponse;
@@ -6,6 +6,7 @@ import com.berru.app.cabbookingapplication.dto.UpdateUserRequestDTO;
 import com.berru.app.cabbookingapplication.dto.UserResponseDTO;
 import com.berru.app.cabbookingapplication.mapper.UserMapper;
 import com.berru.app.cabbookingapplication.repository.UserRepository;
+import com.berru.app.cabbookingapplication.service.UserService;
 import org.springframework.stereotype.Service;
 
 import javax.management.relation.RoleStatus;

@@ -1,4 +1,4 @@
-package com.berru.app.cabbookingapplication.service;
+package com.berru.app.cabbookingapplication.service.impl;
 
 import com.berru.app.cabbookingapplication.dto.*;
 import com.berru.app.cabbookingapplication.entity.BookingForm;
@@ -6,6 +6,7 @@ import com.berru.app.cabbookingapplication.exception.ResourceNotFoundException;
 import com.berru.app.cabbookingapplication.mapper.BookingFormMapper;
 import com.berru.app.cabbookingapplication.repository.BookingFormRepository;
 import com.berru.app.cabbookingapplication.rsql.CustomRsqlVisitor;
+import com.berru.app.cabbookingapplication.service.BookingService;
 import cz.jirutka.rsql.parser.RSQLParser;
 import cz.jirutka.rsql.parser.ast.Node;
 import jakarta.transaction.Transactional;
