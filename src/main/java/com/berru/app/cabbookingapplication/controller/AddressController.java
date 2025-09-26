@@ -32,15 +32,17 @@ public class AddressController {
     }
 
     @GetMapping
-    public PaginationResponse<AddressResponseDTO> listPaginated(
+    public ResponseEntity<PaginationResponse<AddressResponseDTO>> listPaginated(
             @RequestParam int pageNo,
             @RequestParam int size) {
-        return null;
+        PaginationResponse<AddressResponseDTO> paginationResponseDTO = addressService.listPaginated(pageNo, size);
+        return ResponseEntity.ok(paginationResponseDTO);
     }
 
     @GetMapping("/search")
-    public List<AddressResponseDTO> searchAddressByRsql(@RequestParam String query) {
-        return List.of();
+    public ResponseEntity<List<AddressResponseDTO>> searchAddressByRsql(@RequestParam String query) {
+        List<AddressResponseDTO> addressResponseDTO = addressService.searchAddressByRsql(query);
+        return ResponseEntity.ok(addressResponseDTO);
     }
 
     @PutMapping("/{id}")
