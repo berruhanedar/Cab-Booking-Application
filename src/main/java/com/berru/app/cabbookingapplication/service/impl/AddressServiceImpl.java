@@ -90,7 +90,11 @@ public class AddressServiceImpl implements AddressService {
     @Override
     @Transactional
     public AddressResponseDTO updateAddress(Integer id, UpdateAddressRequestDTO updateAddressRequestDTO) {
-        return null;
+        Address existing =  addressRepository.findById(id).
+                orElseThrow(() -> new RuntimeException("Address not found"));
+        addressMapper.updateAddressFromDTO(updateAddressRequestDTO, existing);
+        Address updatedAddress = addressRepository.save(existing);
+        return addressMapper.toAddressDTO(updatedAddress);
     }
 
     @Override
