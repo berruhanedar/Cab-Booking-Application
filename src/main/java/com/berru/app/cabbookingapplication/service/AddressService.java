@@ -8,7 +8,7 @@ import java.util.List;
 @Service
 public interface AddressService {
 
-    AddressResponseDTO saveUser(NewAddressRequestDTO newAddressRequestDTO);
+    AddressResponseDTO saveAddress(NewAddressRequestDTO newAddressRequestDTO);
 
     AddressResponseDTO getAddressById(Integer id);
 
