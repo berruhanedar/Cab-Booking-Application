@@ -46,10 +46,11 @@ public class AddressController {
     }
 
     @PutMapping("/{id}")
-    public AddressResponseDTO updateAddress(
+    public ResponseEntity<AddressResponseDTO> updateAddress(
             @PathVariable Integer id,
             @RequestBody UpdateAddressRequestDTO updateAddressRequestDTO) {
-        return null;
+        AddressResponseDTO addressResponseDTO = addressService.updateAddress(id, updateAddressRequestDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(addressResponseDTO);
     }
 
     @DeleteMapping("/{id}")
