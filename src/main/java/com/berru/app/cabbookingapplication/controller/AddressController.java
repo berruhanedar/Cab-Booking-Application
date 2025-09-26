@@ -54,6 +54,8 @@ public class AddressController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteAddressById(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteAddressById(@PathVariable Integer id) {
+        addressService.deleteAddressById(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
