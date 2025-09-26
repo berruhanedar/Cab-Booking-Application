@@ -100,6 +100,7 @@ public class AddressServiceImpl implements AddressService {
     @Override
     @Transactional
     public void deleteAddressById(Integer id) {
-
+        Address address = addressRepository.findById(id).orElseThrow(() -> new RuntimeException("Address not found"));
+        addressRepository.delete(address);
     }
 }
