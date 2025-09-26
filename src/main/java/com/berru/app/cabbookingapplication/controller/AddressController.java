@@ -2,6 +2,8 @@ package com.berru.app.cabbookingapplication.controller;
 
 import com.berru.app.cabbookingapplication.dto.*;
 import com.berru.app.cabbookingapplication.service.AddressService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,13 +19,16 @@ public class AddressController {
     }
 
     @PostMapping
-    public AddressResponseDTO saveAddress(@RequestBody NewAddressRequestDTO newAddressRequestDTO) {
-        return null;
+    public ResponseEntity<AddressResponseDTO> saveAddress(@RequestBody NewAddressRequestDTO newAddressRequestDTO) {
+        AddressResponseDTO addressResponseDTO = addressService.saveAddress(newAddressRequestDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(addressResponseDTO);
+
     }
 
     @GetMapping("/{id}")
-    public AddressResponseDTO getAddressById(@PathVariable Integer id) {
-        return null;
+    public ResponseEntity<AddressResponseDTO> getAddressById(@PathVariable Integer id) {
+        AddressResponseDTO addressResponseDTO = addressService.getAddressById(id);
+        return ResponseEntity.ok(addressResponseDTO);
     }
 
     @GetMapping
