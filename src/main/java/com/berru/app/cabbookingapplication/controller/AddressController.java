@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/addresses")
+@RequestMapping("/api/address")
 public class AddressController {
 
     private final AddressService addressService;
@@ -22,7 +22,6 @@ public class AddressController {
     public ResponseEntity<AddressResponseDTO> saveAddress(@RequestBody NewAddressRequestDTO newAddressRequestDTO) {
         AddressResponseDTO addressResponseDTO = addressService.saveAddress(newAddressRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(addressResponseDTO);
-
     }
 
     @GetMapping("/{id}")
