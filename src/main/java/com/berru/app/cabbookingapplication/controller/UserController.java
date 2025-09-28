@@ -4,6 +4,7 @@ import com.berru.app.cabbookingapplication.dto.NewUserRequestDTO;
 import com.berru.app.cabbookingapplication.dto.PaginationResponse;
 import com.berru.app.cabbookingapplication.dto.UpdateUserRequestDTO;
 import com.berru.app.cabbookingapplication.dto.UserResponseDTO;
+import com.berru.app.cabbookingapplication.enums.UserStatus;
 import com.berru.app.cabbookingapplication.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -25,7 +26,7 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<UserResponseDTO> createUser(@RequestBody @Valid NewUserRequestDTO newUserRequestDTO) {
-        UserResponseDTO userResponseDTO =  userService.createUser(newUserRequestDTO);
+        UserResponseDTO userResponseDTO = userService.createUser(newUserRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(userResponseDTO);
     }
 
@@ -63,4 +64,13 @@ public class UserController {
             @RequestParam RoleStatus newRole) {
         return null;
     }
+
+    @PatchMapping("/{id}/status")
+    public UserResponseDTO changeUserStatus(
+            @PathVariable Integer id,
+            @RequestParam UserStatus newStatus) {
+        return null;
+    }
+
+
 }
