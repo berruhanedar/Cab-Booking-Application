@@ -5,6 +5,8 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class UpdateUserRequestDTO {
 
@@ -18,4 +20,7 @@ public class UpdateUserRequestDTO {
     private String email;
 
     private RoleStatus role;
+
+    private List<Integer> addressIds;
+
 }

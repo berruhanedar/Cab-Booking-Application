@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class NewUserRequestDTO {
 
@@ -23,5 +25,7 @@ public class NewUserRequestDTO {
 
     @NotNull(message = "Role cannot be null")
     private RoleStatus role;
+
+    private List<Integer> addressId;
 
 }
