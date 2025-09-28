@@ -6,6 +6,8 @@ import com.berru.app.cabbookingapplication.dto.UpdateUserRequestDTO;
 import com.berru.app.cabbookingapplication.dto.UserResponseDTO;
 import com.berru.app.cabbookingapplication.service.UserService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.management.relation.RoleStatus;
@@ -22,8 +24,9 @@ public class UserController {
     }
 
     @PostMapping
-    public UserResponseDTO createUser(@RequestBody @Valid NewUserRequestDTO newUserRequestDTO) {
-        return null;
+    public ResponseEntity<UserResponseDTO> createUser(@RequestBody @Valid NewUserRequestDTO newUserRequestDTO) {
+        UserResponseDTO userResponseDTO =  userService.createUser(newUserRequestDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(userResponseDTO);
     }
 
     @GetMapping("/{id}")
