@@ -6,6 +6,7 @@ import com.berru.app.cabbookingapplication.dto.UpdateUserRequestDTO;
 import com.berru.app.cabbookingapplication.dto.UserResponseDTO;
 import com.berru.app.cabbookingapplication.entity.Address;
 import com.berru.app.cabbookingapplication.entity.User;
+import com.berru.app.cabbookingapplication.enums.UserStatus;
 import com.berru.app.cabbookingapplication.exception.DuplicateEmailException;
 import com.berru.app.cabbookingapplication.exception.ResourceNotFoundException;
 import com.berru.app.cabbookingapplication.mapper.UserMapper;
@@ -72,6 +73,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDTO changeUserRole(Integer id, RoleStatus newRole) {
+        return null;
+    }
+
+    @Override
+    public UserResponseDTO changeUserStatus(Integer id, UserStatus newStatus) {
         return null;
     }
 
