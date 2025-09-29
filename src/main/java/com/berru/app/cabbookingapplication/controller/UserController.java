@@ -45,8 +45,9 @@ public class UserController {
     }
 
     @GetMapping("/search")
-    public List<UserResponseDTO> searchUserByRsql(@RequestParam String query) {
-        return List.of();
+    public ResponseEntity<List<UserResponseDTO>> searchUserByRsql(@RequestParam String query) {
+        List<UserResponseDTO> userResponseDTOList = userService.searchUserByRsql(query);
+        return ResponseEntity.ok(userResponseDTOList);
     }
 
     @PutMapping("/{id}")

@@ -12,10 +12,15 @@ import com.berru.app.cabbookingapplication.exception.ResourceNotFoundException;
 import com.berru.app.cabbookingapplication.mapper.UserMapper;
 import com.berru.app.cabbookingapplication.repository.AddressRepository;
 import com.berru.app.cabbookingapplication.repository.UserRepository;
+import com.berru.app.cabbookingapplication.rsql.CustomRsqlVisitor;
 import com.berru.app.cabbookingapplication.service.UserService;
+import cz.jirutka.rsql.parser.RSQLParser;
+import cz.jirutka.rsql.parser.ast.Node;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import javax.management.relation.RoleStatus;
@@ -36,6 +41,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserResponseDTO createUser(NewUserRequestDTO newUserRequestDTO) {
         User user = userMapper.toUser(newUserRequestDTO);
 
@@ -52,12 +58,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserResponseDTO getUserById(Integer id) {
         User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found with id " + id));
         return userMapper.toUserResponseDTO(user);
     }
 
     @Override
+    @Transactional
     public PaginationResponse<UserResponseDTO> listPaginated(int pageNo, int size) {
         Pageable pageable = PageRequest.of(pageNo, size);
 
@@ -79,8 +87,17 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
+    @Transactional
     public List<UserResponseDTO> searchUserByRsql(String query) {
-        return List.of();
+
+        RSQLParser parser = new RSQLParser();
+        Node rootNode = parser.parse(query);
+
+        CustomRsqlVisitor<User> visitor = new CustomRsqlVisitor<>();
+        Specification<User> spec = rootNode.accept(visitor);
+
+        List<User> users = userRepository.findAll(spec);
+        return users.stream().map(userMapper::toUserResponseDTO).collect(Collectors.toList());
     }
 
     @Override
