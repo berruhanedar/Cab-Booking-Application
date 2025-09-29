@@ -25,7 +25,7 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final AddressRepository addressRepository;
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper,  AddressRepository addressRepository) {
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, AddressRepository addressRepository) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.addressRepository = addressRepository;
@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService {
     public UserResponseDTO createUser(NewUserRequestDTO newUserRequestDTO) {
         User user = userMapper.toUser(newUserRequestDTO);
 
-        Address address = addressRepository.findById(newUserRequestDTO.getAddressId()).orElseThrow(()-> new ResourceNotFoundException("Address not found with id "+ newUserRequestDTO.getAddressId()));
+        Address address = addressRepository.findById(newUserRequestDTO.getAddressId()).orElseThrow(() -> new ResourceNotFoundException("Address not found with id " + newUserRequestDTO.getAddressId()));
 
         validateNewUser(newUserRequestDTO);
 
@@ -49,7 +49,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDTO getUserById(Integer id) {
-        return null;
+        User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found with id " + id));
+        return userMapper.toUserResponseDTO(user);
     }
 
     @Override
