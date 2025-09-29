@@ -13,10 +13,14 @@ import com.berru.app.cabbookingapplication.mapper.UserMapper;
 import com.berru.app.cabbookingapplication.repository.AddressRepository;
 import com.berru.app.cabbookingapplication.repository.UserRepository;
 import com.berru.app.cabbookingapplication.service.UserService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.management.relation.RoleStatus;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -55,8 +59,24 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public PaginationResponse<UserResponseDTO> listPaginated(int pageNo, int size) {
-        return null;
+        Pageable pageable = PageRequest.of(pageNo, size);
+
+        Page<User> userPage = userRepository.findAll(pageable);
+
+        List<UserResponseDTO> userResponseDTOList = userPage.getContent().stream()
+                .map(userMapper::toUserResponseDTO)
+                .collect(Collectors.toList());
+
+        return PaginationResponse.<UserResponseDTO>builder()
+                .content(userResponseDTOList)
+                .pageNo(userPage.getNumber())
+                .pageSize(userPage.getSize())
+                .totalElements(userPage.getTotalElements())
+                .totalPages(userPage.getTotalPages())
+                .isLast(userPage.isLast())
+                .build();
     }
+
 
     @Override
     public List<UserResponseDTO> searchUserByRsql(String query) {
