@@ -37,10 +37,11 @@ public class UserController {
     }
 
     @GetMapping
-    public PaginationResponse<UserResponseDTO> listPaginated(
+    public ResponseEntity<PaginationResponse<UserResponseDTO>> listPaginated(
             @RequestParam int pageNo,
             @RequestParam int size) {
-        return null;
+        PaginationResponse<UserResponseDTO> paginationResponse = userService.listPaginated(pageNo, size);
+        return ResponseEntity.ok(paginationResponse);
     }
 
     @GetMapping("/search")
