@@ -20,6 +20,8 @@ public interface UserService {
 
     UserResponseDTO updateUser(Integer id, UpdateUserRequestDTO updateUserRequestDTO);
 
+    UserResponseDTO addAddressToUser(Integer userId, Integer addressId);
+
     void deleteUserById(Integer id);
 
     UserResponseDTO changeUserRole(Integer id, RoleStatus newRole);

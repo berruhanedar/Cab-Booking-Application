@@ -106,6 +106,34 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
+    public UserResponseDTO addAddressToUser(Integer userId, Integer addressId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
+
+        Address address = addressRepository.findById(addressId)
+                .orElseThrow(() -> new ResourceNotFoundException("Address not found with id: " + addressId));
+
+        if (address.getUser() != null && !address.getUser().getId().equals(userId)) {
+            throw new IllegalArgumentException("Address already belongs to another user");
+        }
+
+        boolean alreadyHasAddress = user.getAddresses().stream()
+                .anyMatch(addr -> addr.getId().equals(addressId));
+
+        if (alreadyHasAddress) {
+            throw new IllegalArgumentException("User already has this address");
+        }
+
+        address.setUser(user);
+        user.getAddresses().add(address);
+
+        User updatedUser = userRepository.save(user);
+        return userMapper.toUserResponseDTO(updatedUser);
+
+    }
+
+    @Override
     public void deleteUserById(Integer id) {
     }
 
