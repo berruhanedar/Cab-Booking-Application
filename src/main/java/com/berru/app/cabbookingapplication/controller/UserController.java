@@ -57,6 +57,14 @@ public class UserController {
         return null;
     }
 
+    @PostMapping("/{userId}/addresses/{addressId}")
+    public ResponseEntity<UserResponseDTO> addAddressToUser(
+            @PathVariable Integer userId,
+            @PathVariable Integer addressId) {
+        UserResponseDTO userResponseDTO = userService.addAddressToUser(userId, addressId);
+        return ResponseEntity.ok(userResponseDTO);
+    }
+
     @DeleteMapping("/{id}")
     public void deleteUserById(@PathVariable Integer id) {
     }
@@ -74,6 +82,4 @@ public class UserController {
             @RequestParam UserStatus newStatus) {
         return null;
     }
-
-
 }
