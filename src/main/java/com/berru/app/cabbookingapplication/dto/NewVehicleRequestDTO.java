@@ -1,10 +1,8 @@
 package com.berru.app.cabbookingapplication.dto;
 
-import com.berru.app.cabbookingapplication.enums.VehicleTypeStatus;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import com.berru.app.cabbookingapplication.enums.VehicleType;
+import com.berru.app.cabbookingapplication.enums.VehicleEnergyType;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 
 @Data
@@ -23,5 +21,8 @@ public class NewVehicleRequestDTO {
     private String color;
 
     @NotNull(message = "Vehicle type cannot be null")
-    private VehicleTypeStatus type;
+    private VehicleType type;
+
+    @NotNull(message = "Vehicle energy type cannot be null")
+    private VehicleEnergyType energyType;
 }

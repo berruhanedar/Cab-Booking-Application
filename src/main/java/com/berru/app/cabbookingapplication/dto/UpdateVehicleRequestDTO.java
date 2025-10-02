@@ -1,8 +1,7 @@
 package com.berru.app.cabbookingapplication.dto;
 
-import com.berru.app.cabbookingapplication.enums.VehicleTypeStatus;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import com.berru.app.cabbookingapplication.enums.VehicleEnergyType;
+import com.berru.app.cabbookingapplication.enums.VehicleType;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -20,7 +19,8 @@ public class UpdateVehicleRequestDTO {
     @Size(max = 20, message = "Vehicle color must be at most 20 characters")
     private String color;
 
-    @NotNull(message = "Vehicle type cannot be null")
-    private VehicleTypeStatus type;
+    private VehicleType type;
+
+    private VehicleEnergyType energyType;
 
 }
