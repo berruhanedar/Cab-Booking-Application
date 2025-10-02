@@ -2,9 +2,9 @@ package com.berru.app.cabbookingapplication.service;
 
 import com.berru.app.cabbookingapplication.dto.*;
 import com.berru.app.cabbookingapplication.enums.UserStatus;
+import com.berru.app.cabbookingapplication.enums.RoleStatus;
 import org.springframework.stereotype.Service;
 
-import javax.management.relation.RoleStatus;
 import java.util.List;
 
 @Service
@@ -24,7 +24,7 @@ public interface UserService {
 
     void deleteUserById(Integer id);
 
-    UserResponseDTO changeUserRole(Integer id, RoleStatus newRole);
+    UserResponseDTO changeUserRole(Integer targetUserId, RoleStatus newRole);
 
     UserResponseDTO changeUserStatus(Integer id, UserStatus newStatus);
 }

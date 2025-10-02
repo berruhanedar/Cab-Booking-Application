@@ -7,6 +7,7 @@ import com.berru.app.cabbookingapplication.dto.UserResponseDTO;
 import com.berru.app.cabbookingapplication.entity.Address;
 import com.berru.app.cabbookingapplication.entity.User;
 import com.berru.app.cabbookingapplication.enums.UserStatus;
+import com.berru.app.cabbookingapplication.enums.RoleStatus;
 import com.berru.app.cabbookingapplication.exception.DuplicateEmailException;
 import com.berru.app.cabbookingapplication.exception.ResourceNotFoundException;
 import com.berru.app.cabbookingapplication.mapper.UserMapper;
@@ -23,7 +24,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import javax.management.relation.RoleStatus;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -145,8 +145,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserResponseDTO changeUserRole(Integer id, RoleStatus newRole) {
-        return null;
+        User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found with id " + id));
+        user.setRole(newRole);
+        userRepository.save(user);
+        return userMapper.toUserResponseDTO(user);
     }
 
     @Override
