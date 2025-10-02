@@ -101,8 +101,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserResponseDTO updateUser(Integer id, UpdateUserRequestDTO updateUserRequestDTO) {
-        return null;
+        User existingUser = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found with id " + id));
+        userMapper.updateUserFromDTO(updateUserRequestDTO, existingUser);
+        User savedUser = userRepository.save(existingUser);
+        return userMapper.toUserResponseDTO(savedUser);
     }
 
     @Override
