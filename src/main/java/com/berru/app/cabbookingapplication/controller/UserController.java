@@ -82,9 +82,10 @@ public class UserController {
     }
 
     @PatchMapping("/{id}/status")
-    public UserResponseDTO changeUserStatus(
+    public ResponseEntity<UserResponseDTO> changeUserStatus(
             @PathVariable Integer id,
             @RequestParam UserStatus newStatus) {
-        return null;
+        UserResponseDTO userResponseDTO = userService.changeUserStatus(id, newStatus);
+        return ResponseEntity.ok(userResponseDTO);
     }
 }
