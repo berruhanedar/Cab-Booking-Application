@@ -4,14 +4,15 @@ import com.berru.app.cabbookingapplication.dto.NewUserRequestDTO;
 import com.berru.app.cabbookingapplication.dto.PaginationResponse;
 import com.berru.app.cabbookingapplication.dto.UpdateUserRequestDTO;
 import com.berru.app.cabbookingapplication.dto.UserResponseDTO;
+import com.berru.app.cabbookingapplication.enums.RoleStatus;
 import com.berru.app.cabbookingapplication.enums.UserStatus;
 import com.berru.app.cabbookingapplication.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import javax.management.relation.RoleStatus;
 import java.util.List;
 
 @RestController
@@ -73,10 +74,11 @@ public class UserController {
     }
 
     @PatchMapping("/{id}/role")
-    public UserResponseDTO changeUserRole(
+    public ResponseEntity<UserResponseDTO> changeUserRole(
             @PathVariable Integer id,
             @RequestParam RoleStatus newRole) {
-        return null;
+        UserResponseDTO userResponseDTO = userService.changeUserRole(id, newRole);
+        return ResponseEntity.ok(userResponseDTO);
     }
 
     @PatchMapping("/{id}/status")
