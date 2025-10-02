@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class NewDriverRequestDTO {
+public class UpdateDriverRequestDTO {
 
     @NotNull(message = "User ID cannot be null")
     private Integer userId;
@@ -24,3 +24,5 @@ public class NewDriverRequestDTO {
     private LocationUpdateDTO currentLocation;
 
 }
+
+
