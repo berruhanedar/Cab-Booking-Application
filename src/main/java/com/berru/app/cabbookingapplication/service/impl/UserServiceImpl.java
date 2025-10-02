@@ -154,8 +154,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserResponseDTO changeUserStatus(Integer id, UserStatus newStatus) {
-        return null;
+        User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found with id " + id));
+        user.setStatus(newStatus);
+        userRepository.save(user);
+        return userMapper.toUserResponseDTO(user);
     }
 
     private void validateNewUser(NewUserRequestDTO dto) {
