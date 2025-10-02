@@ -51,10 +51,11 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public UserResponseDTO updateUser(
+    public ResponseEntity<UserResponseDTO> updateUser(
             @PathVariable Integer id,
             @RequestBody UpdateUserRequestDTO updateUserRequestDTO) {
-        return null;
+        UserResponseDTO userResponseDTO = userService.updateUser(id, updateUserRequestDTO);
+        return ResponseEntity.ok(userResponseDTO);
     }
 
     @PostMapping("/{userId}/addresses/{addressId}")
