@@ -67,7 +67,9 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteUserById(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteUserById(@PathVariable Integer id) {
+        userService.deleteUserById(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PatchMapping("/{id}/role")
