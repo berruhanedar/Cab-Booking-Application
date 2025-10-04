@@ -1,7 +1,7 @@
 package com.berru.app.cabbookingapplication.service;
 
 import com.berru.app.cabbookingapplication.dto.*;
-import com.berru.app.cabbookingapplication.enums.DriverStatus;
+import com.berru.app.cabbookingapplication.enums.DriverAvailability;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,8 +21,6 @@ public interface DriverService {
 
     DriverResponseDTO updateDriver(Integer id, UpdateDriverRequestDTO updateDriverRequestDTO);
 
-    DriverResponseDTO updateDriverStatus(Integer id, DriverStatus newStatus);
-
     DriverResponseDTO updateDriverLocation(Integer id, LocationResponseDTO locationUpdate);
 
     void deleteDriverById(Integer id);
@@ -31,4 +29,8 @@ public interface DriverService {
 
     DriverResponseDTO incrementTotalRides(Integer id);
 
+    DriverResponseDTO updateDriverAvailability(Integer driverId, DriverAvailability availability);
+
+    // TODO: İleride araç atama/çıkarma işlemleri buraya eklenebilir
+    // Örn: updateDriverVehicle(Integer driverId, Integer vehicleId)
 }
