@@ -1,6 +1,6 @@
 package com.berru.app.cabbookingapplication.dto;
 
-import com.berru.app.cabbookingapplication.enums.ComfortStatus;
+import com.berru.app.cabbookingapplication.enums.VehicleType;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -25,7 +25,7 @@ public class BookingFormResponseDTO {
 
     private LocalDate date;
 
-    private ComfortStatus comfort;
+    private VehicleType vehicleType;
 
     private Integer adult;
 

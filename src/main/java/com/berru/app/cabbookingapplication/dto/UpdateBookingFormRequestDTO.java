@@ -1,6 +1,6 @@
 package com.berru.app.cabbookingapplication.dto;
 
-import com.berru.app.cabbookingapplication.enums.ComfortStatus;
+import com.berru.app.cabbookingapplication.enums.VehicleType;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
@@ -44,7 +44,7 @@ public class UpdateBookingFormRequestDTO {
     private Integer adult;
 
     @NotNull(message = "Comfort cannot be null")
-    private ComfortStatus comfort;
+    private VehicleType vehicleType;
 
     @NotNull(message = "Children count cannot be null")
     @Min(value = 0, message = "Children count cannot be negative")

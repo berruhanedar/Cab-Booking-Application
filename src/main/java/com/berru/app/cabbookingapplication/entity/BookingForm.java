@@ -1,6 +1,6 @@
 package com.berru.app.cabbookingapplication.entity;
 
-import com.berru.app.cabbookingapplication.enums.ComfortStatus;
+import com.berru.app.cabbookingapplication.enums.VehicleType;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -43,7 +43,7 @@ public class BookingForm {
 
     @Column(name = "comfort")
     @Enumerated(EnumType.STRING)
-    private ComfortStatus comfort;
+    private VehicleType vehicleType;
 
     @Column(name = "adult")
     private Integer adult;
