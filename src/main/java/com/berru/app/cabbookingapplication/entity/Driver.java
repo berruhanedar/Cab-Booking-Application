@@ -1,6 +1,6 @@
 package com.berru.app.cabbookingapplication.entity;
 
-import com.berru.app.cabbookingapplication.enums.DriverStatus;
+import com.berru.app.cabbookingapplication.enums.DriverAvailability;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,10 +24,6 @@ public class Driver {
     @Column(name = "driver_license_number", nullable = false, unique = true)
     private String driverLicenseNumber;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
-    private DriverStatus status = DriverStatus.PENDING;
-
     @Column(name = "rating")
     private Double rating = 5.0;
 
@@ -41,6 +37,10 @@ public class Driver {
             @AttributeOverride(name = "address", column = @Column(name = "current_address"))
     })
     private LocationEmbeddable currentLocation;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "availability", nullable = false)
+    private DriverAvailability availability = DriverAvailability.OFFLINE;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "vehicle_id")

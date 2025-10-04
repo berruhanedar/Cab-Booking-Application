@@ -1,6 +1,5 @@
 package com.berru.app.cabbookingapplication.dto;
 
-import com.berru.app.cabbookingapplication.enums.DriverStatus;
 import lombok.Data;
 
 @Data
@@ -13,8 +12,6 @@ public class DriverResponseDTO {
     private String driverLicenseNumber;
 
     private VehicleResponseDTO vehicle;
-
-    private DriverStatus status;
 
     private Double rating;
 
