@@ -1,6 +1,8 @@
 package com.berru.app.cabbookingapplication.dto;
 
-import com.berru.app.cabbookingapplication.enums.VehicleTypeStatus;
+import com.berru.app.cabbookingapplication.enums.VehicleEnergyType;
+import com.berru.app.cabbookingapplication.enums.VehicleStatus;
+import com.berru.app.cabbookingapplication.enums.VehicleType;
 import lombok.Data;
 
 @Data
@@ -12,5 +14,12 @@ public class VehicleResponseDTO {
 
     private String color;
 
-    private VehicleTypeStatus type;
+    private VehicleType type;
+
+    private VehicleEnergyType energyType;
+
+    private VehicleStatus status;
+
+    private DriverResponseDTO driver;
+
 }

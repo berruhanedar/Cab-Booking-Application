@@ -1,6 +1,7 @@
 package com.berru.app.cabbookingapplication.dto;
 
 import com.berru.app.cabbookingapplication.enums.VehicleEnergyType;
+import com.berru.app.cabbookingapplication.enums.VehicleStatus;
 import com.berru.app.cabbookingapplication.enums.VehicleType;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -23,4 +24,5 @@ public class UpdateVehicleRequestDTO {
 
     private VehicleEnergyType energyType;
 
+    private VehicleStatus status;
 }
