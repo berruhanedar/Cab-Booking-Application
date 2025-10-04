@@ -1,6 +1,7 @@
 package com.berru.app.cabbookingapplication.entity;
 
 import com.berru.app.cabbookingapplication.enums.VehicleEnergyType;
+import com.berru.app.cabbookingapplication.enums.VehicleStatus;
 import com.berru.app.cabbookingapplication.enums.VehicleType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -28,12 +29,16 @@ public class Vehicle {
     private String color;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "type")
-    private VehicleType type;
+    @Column(name = "type", nullable = false)
+    private VehicleType type = VehicleType.STANDARD;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "energy_type")
-    private VehicleEnergyType energyType;
+    @Column(name = "energy_type", nullable = false)
+    private VehicleEnergyType energyType = VehicleEnergyType.FUEL;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private VehicleStatus status = VehicleStatus.AVAILABLE;
 
     @OneToOne(mappedBy = "vehicle")
     private Driver driver;
