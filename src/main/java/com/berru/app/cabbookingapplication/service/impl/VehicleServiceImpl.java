@@ -42,10 +42,11 @@ public class VehicleServiceImpl implements VehicleService {
         return vehicleMapper.toVehicleResponseDTO(vehicle);
     }
 
-
     @Override
+    @Transactional
     public VehicleResponseDTO getVehicleByPlate(String plate) {
-        return null;
+        Vehicle vehicle = vehicleRepository.findByPlate(plate).orElseThrow(() -> new ResourceNotFoundException("Vehicle not found with plate: " + plate));
+        return vehicleMapper.toVehicleResponseDTO(vehicle);
     }
 
     @Override
