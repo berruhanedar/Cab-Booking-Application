@@ -11,7 +11,8 @@ public class NewVehicleRequestDTO {
 
     @NotBlank(message = "Vehicle plate cannot be blank")
     @Size(min = 5, max = 15, message = "Vehicle plate must be between 5 and 15 characters")
-    @Pattern(regexp = "^[0-9]{2}[A-Z]{1,3}[0-9]{2,4}$", message = "Vehicle plate must be in valid format (e.g., 34ABC123)")
+    @Pattern(regexp = "^[0-9]{2}[A-Za-z]{1,3}[0-9]{2,4}$",
+            message = "Vehicle plate must be in valid format (e.g., 34ABC123)")
     private String plate;
 
     @NotBlank(message = "Vehicle model cannot be blank")

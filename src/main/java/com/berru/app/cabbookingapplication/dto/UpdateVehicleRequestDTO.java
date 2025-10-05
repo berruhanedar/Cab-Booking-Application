@@ -11,7 +11,8 @@ import lombok.Data;
 public class UpdateVehicleRequestDTO {
 
     @Size(min = 5, max = 15, message = "Vehicle plate must be between 5 and 15 characters")
-    @Pattern(regexp = "^[0-9]{2}[A-Z]{1,3}[0-9]{2,4}$", message = "Vehicle plate must be in valid format (e.g., 34ABC123)")
+    @Pattern(regexp = "^[0-9]{2}[A-Za-z]{1,3}[0-9]{2,4}$",
+            message = "Vehicle plate must be in valid format (e.g., 34ABC123)")
     private String plate;
 
     @Size(min = 2, max = 50, message = "Vehicle model must be between 2 and 50 characters")
@@ -20,9 +21,9 @@ public class UpdateVehicleRequestDTO {
     @Size(max = 20, message = "Vehicle color must be at most 20 characters")
     private String color;
 
-    private VehicleType type;
+    private VehicleType type = VehicleType.STANDARD;
 
-    private VehicleEnergyType energyType;
+    private VehicleEnergyType energyType = VehicleEnergyType.FUEL;
 
-    private VehicleStatus status;
+    private VehicleStatus status = VehicleStatus.AVAILABLE;
 }
