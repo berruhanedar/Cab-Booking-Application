@@ -8,6 +8,7 @@ import com.berru.app.cabbookingapplication.entity.Vehicle;
 import com.berru.app.cabbookingapplication.enums.VehicleEnergyType;
 import com.berru.app.cabbookingapplication.enums.VehicleStatus;
 import com.berru.app.cabbookingapplication.enums.VehicleType;
+import com.berru.app.cabbookingapplication.exception.ResourceNotFoundException;
 import com.berru.app.cabbookingapplication.mapper.VehicleMapper;
 import com.berru.app.cabbookingapplication.repository.VehicleRepository;
 import com.berru.app.cabbookingapplication.service.VehicleService;
@@ -34,9 +35,13 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
+    @Transactional
     public VehicleResponseDTO getVehicleById(Integer id) {
-        return null;
+        Vehicle vehicle = vehicleRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Vehicle not found with id: " + id));
+        return vehicleMapper.toVehicleResponseDTO(vehicle);
     }
+
 
     @Override
     public VehicleResponseDTO getVehicleByPlate(String plate) {
