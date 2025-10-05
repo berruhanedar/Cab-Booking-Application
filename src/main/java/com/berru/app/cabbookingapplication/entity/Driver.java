@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Table(name = "drivers")
 @Data
@@ -42,7 +44,6 @@ public class Driver {
     @Column(name = "availability", nullable = false)
     private DriverAvailability availability = DriverAvailability.OFFLINE;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "vehicle_id")
-    private Vehicle vehicle;
+    @OneToMany(mappedBy = "driver")
+    private List<Vehicle> vehicles;
 }

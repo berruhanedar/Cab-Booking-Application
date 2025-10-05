@@ -40,7 +40,8 @@ public class Vehicle {
     @Column(name = "status", nullable = false)
     private VehicleStatus status = VehicleStatus.AVAILABLE;
 
-    @OneToOne(mappedBy = "vehicle")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "driver_id")
     private Driver driver;
 
 }
