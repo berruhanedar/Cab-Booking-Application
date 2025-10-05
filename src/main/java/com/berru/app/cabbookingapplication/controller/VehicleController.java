@@ -31,5 +31,14 @@ public class VehicleController {
 
     }
 
+    @GetMapping("/plate/{plate}")
+    public ResponseEntity<VehicleResponseDTO> getVehicleByPlate(@PathVariable String plate) {
+        VehicleResponseDTO vehicleResponseDTO = vehicleService.getVehicleByPlate(plate);
+        return ResponseEntity.status(HttpStatus.OK).body(vehicleResponseDTO);
+    }
+
+
+
+
 
 }
