@@ -9,22 +9,32 @@ import com.berru.app.cabbookingapplication.enums.VehicleEnergyType;
 import com.berru.app.cabbookingapplication.enums.VehicleStatus;
 import com.berru.app.cabbookingapplication.enums.VehicleType;
 import com.berru.app.cabbookingapplication.exception.ResourceNotFoundException;
+import com.berru.app.cabbookingapplication.mapper.PaginationMapper;
 import com.berru.app.cabbookingapplication.mapper.VehicleMapper;
 import com.berru.app.cabbookingapplication.repository.VehicleRepository;
 import com.berru.app.cabbookingapplication.service.VehicleService;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class VehicleServiceImpl implements VehicleService {
 
-   private final VehicleRepository vehicleRepository;
-   private final VehicleMapper vehicleMapper;
+    private final VehicleRepository vehicleRepository;
+    private final VehicleMapper vehicleMapper;
+    private final PaginationMapper paginationMapper;
 
-   public VehicleServiceImpl(VehicleRepository vehicleRepository, VehicleMapper vehicleMapper) {
-       this.vehicleRepository = vehicleRepository;
-       this.vehicleMapper = vehicleMapper;
-   }
+    public VehicleServiceImpl(VehicleRepository vehicleRepository,
+                              VehicleMapper vehicleMapper,
+                              PaginationMapper paginationMapper) {
+        this.vehicleRepository = vehicleRepository;
+        this.vehicleMapper = vehicleMapper;
+        this.paginationMapper = paginationMapper;
+    }
 
     @Override
     @Transactional
@@ -50,27 +60,32 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
+    @Transactional
     public PaginationResponse<VehicleResponseDTO> listPaginated(int pageNo, int size) {
+        Pageable pageable = PageRequest.of(pageNo, size);
+        Page<Vehicle> vehiclePage = vehicleRepository.findAll(pageable);
+
+        return paginationMapper.toPaginationResponse(vehiclePage, vehicleMapper::toVehicleResponseDTO);
+    }
+
+
+    @Override
+    public List<VehicleResponseDTO> listVehiclesByType(VehicleType type, int pageNo, int size) {
         return null;
     }
 
     @Override
-    public PaginationResponse<VehicleResponseDTO> listVehiclesByType(VehicleType type, int pageNo, int size) {
+    public List<VehicleResponseDTO> listVehiclesByEnergy(VehicleEnergyType energyType, int pageNo, int size) {
         return null;
     }
 
     @Override
-    public PaginationResponse<VehicleResponseDTO> listVehiclesByEnergy(VehicleEnergyType energyType, int pageNo, int size) {
+    public List<VehicleResponseDTO> listVehiclesByStatus(VehicleStatus status, int pageNo, int size) {
         return null;
     }
 
     @Override
-    public PaginationResponse<VehicleResponseDTO> listVehiclesByStatus(VehicleStatus status, int pageNo, int size) {
-        return null;
-    }
-
-    @Override
-    public PaginationResponse<VehicleResponseDTO> searchVehicleByRsql(String query, int pageNo, int size) {
+    public List<VehicleResponseDTO> searchVehicleByRsql(String query, int pageNo, int size) {
         return null;
     }
 
