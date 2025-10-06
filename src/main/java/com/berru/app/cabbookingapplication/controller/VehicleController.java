@@ -1,6 +1,7 @@
 package com.berru.app.cabbookingapplication.controller;
 
 import com.berru.app.cabbookingapplication.dto.NewVehicleRequestDTO;
+import com.berru.app.cabbookingapplication.dto.PaginationResponse;
 import com.berru.app.cabbookingapplication.dto.VehicleResponseDTO;
 import com.berru.app.cabbookingapplication.service.VehicleService;
 import jakarta.validation.Valid;
@@ -37,6 +38,12 @@ public class VehicleController {
         return ResponseEntity.status(HttpStatus.OK).body(vehicleResponseDTO);
     }
 
+    @GetMapping
+    public ResponseEntity<PaginationResponse<VehicleResponseDTO>> listPaginated(
+            @RequestParam(defaultValue = "0") int pageNo,
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(vehicleService.listPaginated(pageNo, size));
+    }
 
 
 
