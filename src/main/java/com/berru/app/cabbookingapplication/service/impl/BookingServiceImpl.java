@@ -4,13 +4,13 @@ import com.berru.app.cabbookingapplication.dto.*;
 import com.berru.app.cabbookingapplication.entity.BookingForm;
 import com.berru.app.cabbookingapplication.exception.ResourceNotFoundException;
 import com.berru.app.cabbookingapplication.mapper.BookingFormMapper;
+import com.berru.app.cabbookingapplication.mapper.PaginationMapper;
 import com.berru.app.cabbookingapplication.repository.BookingFormRepository;
 import com.berru.app.cabbookingapplication.rsql.CustomRsqlVisitor;
 import com.berru.app.cabbookingapplication.service.BookingService;
 import cz.jirutka.rsql.parser.RSQLParser;
 import cz.jirutka.rsql.parser.ast.Node;
 import jakarta.transaction.Transactional;
-import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,12 +25,12 @@ public class BookingServiceImpl implements BookingService {
 
     private final BookingFormRepository bookingFormRepository;
     private final BookingFormMapper bookingFormMapper;
-    private final ResourcePatternResolver resourcePatternResolver;
+    private final PaginationMapper paginationMapper;
 
-    public BookingServiceImpl(BookingFormRepository bookingFormRepository, BookingFormMapper bookingFormMapper, ResourcePatternResolver resourcePatternResolver) {
+    public BookingServiceImpl(BookingFormRepository bookingFormRepository, BookingFormMapper bookingFormMapper, PaginationMapper paginationMapper) {
         this.bookingFormRepository = bookingFormRepository;
         this.bookingFormMapper = bookingFormMapper;
-        this.resourcePatternResolver = resourcePatternResolver;
+        this.paginationMapper = paginationMapper;
     }
 
     @Override
@@ -49,25 +49,13 @@ public class BookingServiceImpl implements BookingService {
         return bookingFormMapper.toBookingFormResponseDTO(bookingForm);
     }
 
-
     @Override
     @Transactional
     public PaginationResponse<BookingFormResponseDTO> listPaginated(int pageNo, int pageSize) {
         Pageable pageable = PageRequest.of(pageNo, pageSize);
-
         Page<BookingForm> bookingFormPage = bookingFormRepository.findAll(pageable);
 
-        List<BookingFormResponseDTO> bookingFormResponseDTOList = bookingFormPage.getContent().stream()
-                .map(bookingFormMapper::toBookingFormResponseDTO)
-                .collect(Collectors.toList());
-
-        return PaginationResponse.<BookingFormResponseDTO>builder()
-                .content(bookingFormResponseDTOList)
-                .pageNo(bookingFormPage.getNumber())
-                .pageSize(bookingFormPage.getSize())
-                .totalElements(bookingFormPage.getTotalElements())
-                .isLast(bookingFormPage.isLast())
-                .build();
+        return paginationMapper.toPaginationResponse(bookingFormPage, bookingFormMapper::toBookingFormResponseDTO);
     }
 
     @Override
@@ -83,7 +71,6 @@ public class BookingServiceImpl implements BookingService {
         List<BookingForm> bookingForm = bookingFormRepository.findAll(spec);
 
         return bookingForm.stream().map(bookingFormMapper::toBookingFormResponseDTO).collect(Collectors.toList());
-
     }
 
     @Override
@@ -101,5 +88,4 @@ public class BookingServiceImpl implements BookingService {
         BookingForm bookingForm = bookingFormRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Booking Form not found with id " + id));
         bookingFormRepository.delete(bookingForm);
     }
-
 }

@@ -8,6 +8,7 @@ import com.berru.app.cabbookingapplication.entity.ContactForm;
 import com.berru.app.cabbookingapplication.exception.DuplicateEmailException;
 import com.berru.app.cabbookingapplication.exception.ResourceNotFoundException;
 import com.berru.app.cabbookingapplication.mapper.ContactFormMapper;
+import com.berru.app.cabbookingapplication.mapper.PaginationMapper;
 import com.berru.app.cabbookingapplication.repository.ContactFormRepository;
 import com.berru.app.cabbookingapplication.rsql.CustomRsqlVisitor;
 import com.berru.app.cabbookingapplication.service.ContactService;
@@ -28,10 +29,12 @@ public class ContactServiceImpl implements ContactService {
 
     private final ContactFormRepository contactFormRepository;
     private final ContactFormMapper contactFormMapper;
+    private final PaginationMapper paginationMapper;
 
-    public ContactServiceImpl(ContactFormRepository contactFormRepository, ContactFormMapper contactFormMapper) {
+    public ContactServiceImpl(ContactFormRepository contactFormRepository, ContactFormMapper contactFormMapper, PaginationMapper paginationMapper) {
         this.contactFormRepository = contactFormRepository;
         this.contactFormMapper = contactFormMapper;
+        this.paginationMapper = paginationMapper;
     }
 
     @Override
@@ -50,7 +53,7 @@ public class ContactServiceImpl implements ContactService {
     @Transactional
     public ContactFormResponseDTO getContactFormById(Integer id) {
         ContactForm contactForm = contactFormRepository.findById(id)
-                .orElseThrow(()-> new ResourceNotFoundException("Contact Form not found with id "+id));
+                .orElseThrow(() -> new ResourceNotFoundException("Contact Form not found with id " + id));
         return contactFormMapper.toContactFormResponseDTO(contactForm);
     }
 
@@ -58,20 +61,9 @@ public class ContactServiceImpl implements ContactService {
     @Transactional
     public PaginationResponse<ContactFormResponseDTO> listPaginated(int pageNo, int size) {
         Pageable pageable = PageRequest.of(pageNo, size);
-
         Page<ContactForm> contactFormPage = contactFormRepository.findAll(pageable);
 
-        List<ContactFormResponseDTO> contactFormResponseDTOList = contactFormPage.getContent().stream()
-                .map(contactFormMapper::toContactFormResponseDTO)
-                .collect(Collectors.toList());
-
-        return PaginationResponse.<ContactFormResponseDTO>builder()
-                .content(contactFormResponseDTOList)
-                .pageNo(contactFormPage.getNumber())
-                .pageSize(contactFormPage.getSize())
-                .totalElements(contactFormPage.getTotalElements())
-                .isLast(contactFormPage.isLast())
-                .build();
+        return paginationMapper.toPaginationResponse(contactFormPage, contactFormMapper::toContactFormResponseDTO);
     }
 
     @Override
@@ -89,11 +81,10 @@ public class ContactServiceImpl implements ContactService {
         return contactForm.stream().map(contactFormMapper::toContactFormResponseDTO).collect(Collectors.toList());
     }
 
-
     @Override
     @Transactional
     public ContactFormResponseDTO updateContactForm(Integer id, UpdateContactFormRequestDTO updateContactFormRequestDTO) {
-        ContactForm existingContactForm = contactFormRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Contact Form not found with id "+id));
+        ContactForm existingContactForm = contactFormRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Contact Form not found with id " + id));
         contactFormMapper.updateContactFormFromDTO(updateContactFormRequestDTO, existingContactForm);
         ContactForm savedContactForm = contactFormRepository.save(existingContactForm);
         return contactFormMapper.toContactFormResponseDTO(savedContactForm);
@@ -102,7 +93,7 @@ public class ContactServiceImpl implements ContactService {
     @Override
     @Transactional
     public void deleteContactFormById(Integer id) {
-        ContactForm contactForm = contactFormRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Contact Form not found with id "+id));
+        ContactForm contactForm = contactFormRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Contact Form not found with id " + id));
         contactFormRepository.delete(contactForm);
     }
 }

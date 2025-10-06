@@ -6,6 +6,7 @@ import com.berru.app.cabbookingapplication.dto.PaginationResponse;
 import com.berru.app.cabbookingapplication.dto.UpdateAddressRequestDTO;
 import com.berru.app.cabbookingapplication.entity.Address;
 import com.berru.app.cabbookingapplication.mapper.AddressMapper;
+import com.berru.app.cabbookingapplication.mapper.PaginationMapper;
 import com.berru.app.cabbookingapplication.repository.AddressRepository;
 import com.berru.app.cabbookingapplication.rsql.CustomRsqlVisitor;
 import com.berru.app.cabbookingapplication.service.AddressService;
@@ -26,12 +27,15 @@ public class AddressServiceImpl implements AddressService {
 
     private final AddressRepository addressRepository;
     private final AddressMapper addressMapper;
+    private final PaginationMapper paginationMapper;
 
-    public AddressServiceImpl(AddressRepository addressRepository, AddressMapper addressMapper) {
+    public AddressServiceImpl(AddressRepository addressRepository,
+                              AddressMapper addressMapper,
+                              PaginationMapper paginationMapper) {
         this.addressRepository = addressRepository;
         this.addressMapper = addressMapper;
+        this.paginationMapper = paginationMapper;
     }
-
 
     @Override
     @Transactional
@@ -40,7 +44,6 @@ public class AddressServiceImpl implements AddressService {
         Address savedAddress = addressRepository.save(address);
         return addressMapper.toAddressDTO(savedAddress);
     }
-
 
     @Override
     @Transactional
@@ -54,21 +57,9 @@ public class AddressServiceImpl implements AddressService {
     @Transactional
     public PaginationResponse<AddressResponseDTO> listPaginated(int pageNo, int size) {
         Pageable pageable = PageRequest.of(pageNo, size);
-
         Page<Address> addressPage = addressRepository.findAll(pageable);
 
-        List<AddressResponseDTO> addressResponseDTOList = addressPage.getContent().stream()
-                .map(addressMapper::toAddressDTO)
-                .collect(Collectors.toList());
-
-        return PaginationResponse .<AddressResponseDTO>builder()
-                .content(addressResponseDTOList)
-                .pageNo(addressPage.getNumber())
-                .pageSize(addressPage.getSize())
-                .totalElements(addressPage.getTotalElements())
-                .totalPages(addressPage.getTotalPages())
-                .isLast(addressPage.isLast())
-                .build();
+        return paginationMapper.toPaginationResponse(addressPage, addressMapper::toAddressDTO);
     }
 
     @Override

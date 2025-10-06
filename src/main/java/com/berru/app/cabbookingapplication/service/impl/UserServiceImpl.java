@@ -10,6 +10,7 @@ import com.berru.app.cabbookingapplication.enums.UserStatus;
 import com.berru.app.cabbookingapplication.enums.RoleStatus;
 import com.berru.app.cabbookingapplication.exception.DuplicateEmailException;
 import com.berru.app.cabbookingapplication.exception.ResourceNotFoundException;
+import com.berru.app.cabbookingapplication.mapper.PaginationMapper;
 import com.berru.app.cabbookingapplication.mapper.UserMapper;
 import com.berru.app.cabbookingapplication.repository.AddressRepository;
 import com.berru.app.cabbookingapplication.repository.UserRepository;
@@ -33,11 +34,13 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final AddressRepository addressRepository;
+    private final PaginationMapper paginationMapper;
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, AddressRepository addressRepository) {
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, AddressRepository addressRepository,PaginationMapper paginationMapper) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.addressRepository = addressRepository;
+        this.paginationMapper = paginationMapper;
     }
 
     @Override
@@ -71,20 +74,8 @@ public class UserServiceImpl implements UserService {
 
         Page<User> userPage = userRepository.findAll(pageable);
 
-        List<UserResponseDTO> userResponseDTOList = userPage.getContent().stream()
-                .map(userMapper::toUserResponseDTO)
-                .collect(Collectors.toList());
-
-        return PaginationResponse.<UserResponseDTO>builder()
-                .content(userResponseDTOList)
-                .pageNo(userPage.getNumber())
-                .pageSize(userPage.getSize())
-                .totalElements(userPage.getTotalElements())
-                .totalPages(userPage.getTotalPages())
-                .isLast(userPage.isLast())
-                .build();
+        return paginationMapper.toPaginationResponse(userPage, userMapper::toUserResponseDTO);
     }
-
 
     @Override
     @Transactional
@@ -134,7 +125,6 @@ public class UserServiceImpl implements UserService {
 
         User updatedUser = userRepository.save(user);
         return userMapper.toUserResponseDTO(updatedUser);
-
     }
 
     @Override
