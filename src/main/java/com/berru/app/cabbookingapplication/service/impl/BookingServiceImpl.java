@@ -6,28 +6,28 @@ import com.berru.app.cabbookingapplication.exception.ResourceNotFoundException;
 import com.berru.app.cabbookingapplication.mapper.BookingFormMapper;
 import com.berru.app.cabbookingapplication.mapper.PaginationMapper;
 import com.berru.app.cabbookingapplication.repository.BookingFormRepository;
-import com.berru.app.cabbookingapplication.rsql.CustomRsqlVisitor;
 import com.berru.app.cabbookingapplication.service.BookingService;
-import cz.jirutka.rsql.parser.RSQLParser;
-import cz.jirutka.rsql.parser.ast.Node;
-import jakarta.transaction.Transactional;
+import com.berru.app.cabbookingapplication.service.base.GenericRsqlService;
+import org.springframework.transaction.annotation.Transactional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Service
-public class BookingServiceImpl implements BookingService {
+public class BookingServiceImpl extends GenericRsqlService<BookingForm, BookingFormResponseDTO> implements BookingService {
 
     private final BookingFormRepository bookingFormRepository;
     private final BookingFormMapper bookingFormMapper;
     private final PaginationMapper paginationMapper;
 
     public BookingServiceImpl(BookingFormRepository bookingFormRepository, BookingFormMapper bookingFormMapper, PaginationMapper paginationMapper) {
+        super(bookingFormRepository, bookingFormMapper::toBookingFormResponseDTO);
         this.bookingFormRepository = bookingFormRepository;
         this.bookingFormMapper = bookingFormMapper;
         this.paginationMapper = paginationMapper;
@@ -59,18 +59,8 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    @Transactional
     public List<BookingFormResponseDTO> searchBookingByRsql(String query) {
-        RSQLParser parser = new RSQLParser();
-        Node rootNode = parser.parse(query);
-
-        CustomRsqlVisitor<BookingForm> visitor = new CustomRsqlVisitor<>();
-        Specification<BookingForm> spec = rootNode.accept(visitor);
-
-
-        List<BookingForm> bookingForm = bookingFormRepository.findAll(spec);
-
-        return bookingForm.stream().map(bookingFormMapper::toBookingFormResponseDTO).collect(Collectors.toList());
+        return searchByRsql(query);
     }
 
     @Override

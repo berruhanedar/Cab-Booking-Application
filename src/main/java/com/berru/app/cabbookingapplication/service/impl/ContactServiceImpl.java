@@ -1,37 +1,34 @@
 package com.berru.app.cabbookingapplication.service.impl;
 
-import com.berru.app.cabbookingapplication.dto.ContactFormResponseDTO;
-import com.berru.app.cabbookingapplication.dto.NewContactFormRequestDTO;
-import com.berru.app.cabbookingapplication.dto.PaginationResponse;
-import com.berru.app.cabbookingapplication.dto.UpdateContactFormRequestDTO;
+import com.berru.app.cabbookingapplication.dto.*;
 import com.berru.app.cabbookingapplication.entity.ContactForm;
 import com.berru.app.cabbookingapplication.exception.DuplicateEmailException;
 import com.berru.app.cabbookingapplication.exception.ResourceNotFoundException;
 import com.berru.app.cabbookingapplication.mapper.ContactFormMapper;
 import com.berru.app.cabbookingapplication.mapper.PaginationMapper;
 import com.berru.app.cabbookingapplication.repository.ContactFormRepository;
-import com.berru.app.cabbookingapplication.rsql.CustomRsqlVisitor;
 import com.berru.app.cabbookingapplication.service.ContactService;
-import cz.jirutka.rsql.parser.RSQLParser;
-import cz.jirutka.rsql.parser.ast.Node;
-import jakarta.transaction.Transactional;
+import com.berru.app.cabbookingapplication.service.base.GenericRsqlService;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class ContactServiceImpl implements ContactService {
+public class ContactServiceImpl extends GenericRsqlService<ContactForm, ContactFormResponseDTO> implements ContactService {
 
     private final ContactFormRepository contactFormRepository;
     private final ContactFormMapper contactFormMapper;
     private final PaginationMapper paginationMapper;
 
-    public ContactServiceImpl(ContactFormRepository contactFormRepository, ContactFormMapper contactFormMapper, PaginationMapper paginationMapper) {
+    public ContactServiceImpl(ContactFormRepository contactFormRepository,
+                              ContactFormMapper contactFormMapper,
+                              PaginationMapper paginationMapper) {
+        super(contactFormRepository, contactFormMapper::toContactFormResponseDTO);
         this.contactFormRepository = contactFormRepository;
         this.contactFormMapper = contactFormMapper;
         this.paginationMapper = paginationMapper;
@@ -67,18 +64,9 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<ContactFormResponseDTO> searchContactFormByRsql(String query) {
-        RSQLParser parser = new RSQLParser();
-        Node rootNode = parser.parse(query);
-
-        CustomRsqlVisitor<ContactForm> visitor = new CustomRsqlVisitor<>();
-        Specification<ContactForm> spec = rootNode.accept(visitor);
-
-
-        List<ContactForm> contactForm = contactFormRepository.findAll(spec);
-
-        return contactForm.stream().map(contactFormMapper::toContactFormResponseDTO).collect(Collectors.toList());
+        return searchByRsql(query);
     }
 
     @Override

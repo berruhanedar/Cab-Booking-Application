@@ -8,22 +8,18 @@ import com.berru.app.cabbookingapplication.entity.Address;
 import com.berru.app.cabbookingapplication.mapper.AddressMapper;
 import com.berru.app.cabbookingapplication.mapper.PaginationMapper;
 import com.berru.app.cabbookingapplication.repository.AddressRepository;
-import com.berru.app.cabbookingapplication.rsql.CustomRsqlVisitor;
 import com.berru.app.cabbookingapplication.service.AddressService;
-import cz.jirutka.rsql.parser.RSQLParser;
-import cz.jirutka.rsql.parser.ast.Node;
-import jakarta.transaction.Transactional;
+import com.berru.app.cabbookingapplication.service.base.GenericRsqlService;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
-public class AddressServiceImpl implements AddressService {
+public class AddressServiceImpl extends GenericRsqlService<Address, AddressResponseDTO> implements AddressService {
 
     private final AddressRepository addressRepository;
     private final AddressMapper addressMapper;
@@ -32,6 +28,7 @@ public class AddressServiceImpl implements AddressService {
     public AddressServiceImpl(AddressRepository addressRepository,
                               AddressMapper addressMapper,
                               PaginationMapper paginationMapper) {
+        super(addressRepository, addressMapper::toAddressDTO);
         this.addressRepository = addressRepository;
         this.addressMapper = addressMapper;
         this.paginationMapper = paginationMapper;
@@ -63,19 +60,9 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<AddressResponseDTO> searchAddressByRsql(String query) {
-        RSQLParser parser = new RSQLParser();
-        Node rootNode = parser.parse(query);
-
-        CustomRsqlVisitor<Address> visitor = new CustomRsqlVisitor<>();
-        Specification<Address> spec = rootNode.accept(visitor);
-
-        List<Address> addresses = addressRepository.findAll(spec);
-
-        return addresses.stream()
-                .map(addressMapper::toAddressDTO)
-                .collect(Collectors.toList());
+        return searchByRsql(query);
     }
 
     @Override
