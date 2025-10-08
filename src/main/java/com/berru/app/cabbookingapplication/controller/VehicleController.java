@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/vehicle")
 public class VehicleController {
@@ -45,7 +47,11 @@ public class VehicleController {
         return ResponseEntity.ok(vehicleService.listPaginated(pageNo, size));
     }
 
-
+    @GetMapping("/search")
+    public ResponseEntity<List<VehicleResponseDTO>> searchVehicleByRsql(@RequestParam String query) {
+        List<VehicleResponseDTO> vehicleResponseDTOs = vehicleService.searchVehicleByRsql(query);
+        return ResponseEntity.ok(vehicleResponseDTOs);
+    }
 
 
 }
