@@ -17,13 +17,13 @@ public interface VehicleService {
 
     PaginationResponse<VehicleResponseDTO> listPaginated(int pageNo, int size);
 
-    List<VehicleResponseDTO> listVehiclesByType(VehicleType type, int pageNo, int size);
+    List<VehicleResponseDTO> listVehiclesByType(VehicleType type);
 
-    List<VehicleResponseDTO> listVehiclesByEnergy(VehicleEnergyType energyType, int pageNo, int size);
+    List<VehicleResponseDTO> listVehiclesByEnergy(VehicleEnergyType energyType);
 
-    List<VehicleResponseDTO> listVehiclesByStatus(VehicleStatus status, int pageNo, int size);
+    List<VehicleResponseDTO> listVehiclesByStatus(VehicleStatus status);
 
-    List<VehicleResponseDTO> searchVehicleByRsql(String query, int pageNo, int size);
+    List<VehicleResponseDTO> searchVehicleByRsql(String query);
 
     VehicleResponseDTO updateVehicle(Integer id, UpdateVehicleRequestDTO updateVehicleRequestDTO);
 
