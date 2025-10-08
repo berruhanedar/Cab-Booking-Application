@@ -72,23 +72,23 @@ public class VehicleServiceImpl extends GenericRsqlService<Vehicle,VehicleRespon
     }
 
     @Override
-    public List<VehicleResponseDTO> listVehiclesByType(VehicleType type, int pageNo, int size) {
+    public List<VehicleResponseDTO> listVehiclesByType(VehicleType type) {
         return null;
     }
 
     @Override
-    public List<VehicleResponseDTO> listVehiclesByEnergy(VehicleEnergyType energyType, int pageNo, int size) {
+    public List<VehicleResponseDTO> listVehiclesByEnergy(VehicleEnergyType energyType) {
         return null;
     }
 
     @Override
-    public List<VehicleResponseDTO> listVehiclesByStatus(VehicleStatus status, int pageNo, int size) {
+    public List<VehicleResponseDTO> listVehiclesByStatus(VehicleStatus status) {
         return null;
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<VehicleResponseDTO> searchVehicleByRsql(String query, int pageNo, int size) {
+    public List<VehicleResponseDTO> searchVehicleByRsql(String query) {
         return searchByRsql(query);
     }
 
