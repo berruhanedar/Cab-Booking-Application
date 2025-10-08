@@ -13,16 +13,18 @@ import com.berru.app.cabbookingapplication.mapper.PaginationMapper;
 import com.berru.app.cabbookingapplication.mapper.VehicleMapper;
 import com.berru.app.cabbookingapplication.repository.VehicleRepository;
 import com.berru.app.cabbookingapplication.service.VehicleService;
-import jakarta.transaction.Transactional;
+
+import com.berru.app.cabbookingapplication.service.base.GenericRsqlService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
-public class VehicleServiceImpl implements VehicleService {
+public class VehicleServiceImpl extends GenericRsqlService<Vehicle,VehicleResponseDTO> implements VehicleService {
 
     private final VehicleRepository vehicleRepository;
     private final VehicleMapper vehicleMapper;
@@ -31,6 +33,7 @@ public class VehicleServiceImpl implements VehicleService {
     public VehicleServiceImpl(VehicleRepository vehicleRepository,
                               VehicleMapper vehicleMapper,
                               PaginationMapper paginationMapper) {
+        super(vehicleRepository, vehicleMapper ::toVehicleResponseDTO);
         this.vehicleRepository = vehicleRepository;
         this.vehicleMapper = vehicleMapper;
         this.paginationMapper = paginationMapper;
@@ -68,7 +71,6 @@ public class VehicleServiceImpl implements VehicleService {
         return paginationMapper.toPaginationResponse(vehiclePage, vehicleMapper::toVehicleResponseDTO);
     }
 
-
     @Override
     public List<VehicleResponseDTO> listVehiclesByType(VehicleType type, int pageNo, int size) {
         return null;
@@ -85,8 +87,9 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<VehicleResponseDTO> searchVehicleByRsql(String query, int pageNo, int size) {
-        return null;
+        return searchByRsql(query);
     }
 
     @Override
