@@ -76,12 +76,16 @@ public class VehicleController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<VehicleResponseDTO> updateVehicle(@PathVariable Integer id , @RequestBody @Valid UpdateVehicleRequestDTO updateVehicleRequestDTO) {
+    public ResponseEntity<VehicleResponseDTO> updateVehicle(@PathVariable Integer id, @RequestBody @Valid UpdateVehicleRequestDTO updateVehicleRequestDTO) {
         VehicleResponseDTO vehicleResponseDTO = vehicleService.updateVehicle(id, updateVehicleRequestDTO);
         return ResponseEntity.status(HttpStatus.OK).body(vehicleResponseDTO);
     }
 
-
+    @PatchMapping("/{id}/status/{status}")
+    public ResponseEntity<VehicleResponseDTO> updateVehicleStatus(@PathVariable Integer id, @PathVariable VehicleStatus status) {
+        VehicleResponseDTO vehicleResponseDTO = vehicleService.updateVehicleStatus(id, status);
+        return ResponseEntity.ok(vehicleResponseDTO);
+    }
 
 
 }
