@@ -81,13 +81,21 @@ public class VehicleServiceImpl extends GenericRsqlService<Vehicle,VehicleRespon
     }
 
     @Override
+    @Transactional
     public List<VehicleResponseDTO> listVehiclesByEnergy(VehicleEnergyType energyType) {
-        return null;
+       List<Vehicle> vehicles = vehicleRepository.findByEnergy(energyType);
+       return vehicles.stream()
+                .map(vehicleMapper::toVehicleResponseDTO)
+                .toList();
     }
 
     @Override
+    @Transactional
     public List<VehicleResponseDTO> listVehiclesByStatus(VehicleStatus status) {
-        return null;
+        List<Vehicle> vehicles = vehicleRepository.findyStatus(status);
+        return vehicles.stream()
+                .map(vehicleMapper::toVehicleResponseDTO)
+                .toList();
     }
 
     @Override
