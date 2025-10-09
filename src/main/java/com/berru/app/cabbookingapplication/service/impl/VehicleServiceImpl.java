@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-public class VehicleServiceImpl extends GenericRsqlService<Vehicle,VehicleResponseDTO> implements VehicleService {
+public class VehicleServiceImpl extends GenericRsqlService<Vehicle, VehicleResponseDTO> implements VehicleService {
 
     private final VehicleRepository vehicleRepository;
     private final VehicleMapper vehicleMapper;
@@ -33,7 +33,7 @@ public class VehicleServiceImpl extends GenericRsqlService<Vehicle,VehicleRespon
     public VehicleServiceImpl(VehicleRepository vehicleRepository,
                               VehicleMapper vehicleMapper,
                               PaginationMapper paginationMapper) {
-        super(vehicleRepository, vehicleMapper ::toVehicleResponseDTO);
+        super(vehicleRepository, vehicleMapper::toVehicleResponseDTO);
         this.vehicleRepository = vehicleRepository;
         this.vehicleMapper = vehicleMapper;
         this.paginationMapper = paginationMapper;
@@ -83,8 +83,8 @@ public class VehicleServiceImpl extends GenericRsqlService<Vehicle,VehicleRespon
     @Override
     @Transactional
     public List<VehicleResponseDTO> listVehiclesByEnergy(VehicleEnergyType energyType) {
-       List<Vehicle> vehicles = vehicleRepository.findByEnergy(energyType);
-       return vehicles.stream()
+        List<Vehicle> vehicles = vehicleRepository.findByEnergy(energyType);
+        return vehicles.stream()
                 .map(vehicleMapper::toVehicleResponseDTO)
                 .toList();
     }
@@ -108,14 +108,18 @@ public class VehicleServiceImpl extends GenericRsqlService<Vehicle,VehicleRespon
     @Transactional
     public VehicleResponseDTO updateVehicle(Integer id, UpdateVehicleRequestDTO updateVehicleRequestDTO) {
         Vehicle existingVehicle = vehicleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Vehicle not found with id: " + id));
-        vehicleMapper.updateVehicleDTO(updateVehicleRequestDTO,existingVehicle);
+        vehicleMapper.updateVehicleDTO(updateVehicleRequestDTO, existingVehicle);
         Vehicle savedVehicle = vehicleRepository.save(existingVehicle);
         return vehicleMapper.toVehicleResponseDTO(savedVehicle);
     }
 
     @Override
+    @Transactional
     public VehicleResponseDTO updateVehicleStatus(Integer id, VehicleStatus status) {
-        return null;
+        Vehicle existingVehicle = vehicleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Vehicle not found with id: " + id));
+        existingVehicle.setStatus(status);
+        Vehicle updatedVehicle = vehicleRepository.save(existingVehicle);
+        return vehicleMapper.toVehicleResponseDTO(updatedVehicle);
     }
 
     @Override
