@@ -72,8 +72,12 @@ public class VehicleServiceImpl extends GenericRsqlService<Vehicle,VehicleRespon
     }
 
     @Override
+    @Transactional
     public List<VehicleResponseDTO> listVehiclesByType(VehicleType type) {
-        return null;
+        List<Vehicle> vehicles = vehicleRepository.findByType(type);
+        return vehicles.stream()
+                .map(vehicleMapper::toVehicleResponseDTO)
+                .toList();
     }
 
     @Override
