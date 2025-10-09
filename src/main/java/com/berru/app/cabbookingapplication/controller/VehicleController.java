@@ -3,6 +3,7 @@ package com.berru.app.cabbookingapplication.controller;
 import com.berru.app.cabbookingapplication.dto.NewVehicleRequestDTO;
 import com.berru.app.cabbookingapplication.dto.PaginationResponse;
 import com.berru.app.cabbookingapplication.dto.VehicleResponseDTO;
+import com.berru.app.cabbookingapplication.enums.VehicleType;
 import com.berru.app.cabbookingapplication.service.VehicleService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -51,6 +52,12 @@ public class VehicleController {
     public ResponseEntity<List<VehicleResponseDTO>> searchVehicleByRsql(@RequestParam String query) {
         List<VehicleResponseDTO> vehicleResponseDTOs = vehicleService.searchVehicleByRsql(query);
         return ResponseEntity.ok(vehicleResponseDTOs);
+    }
+
+    @GetMapping("/search/type/{type}")
+    public ResponseEntity<List<VehicleResponseDTO>> listVehiclesByType(@PathVariable VehicleType type) {
+        List<VehicleResponseDTO> vehicleResponseDTOS = vehicleService.listVehiclesByType(type);
+        return ResponseEntity.ok(vehicleResponseDTOS);
     }
 
 
