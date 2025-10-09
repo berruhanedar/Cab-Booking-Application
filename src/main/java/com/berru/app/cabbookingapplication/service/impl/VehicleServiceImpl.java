@@ -105,8 +105,12 @@ public class VehicleServiceImpl extends GenericRsqlService<Vehicle,VehicleRespon
     }
 
     @Override
+    @Transactional
     public VehicleResponseDTO updateVehicle(Integer id, UpdateVehicleRequestDTO updateVehicleRequestDTO) {
-        return null;
+        Vehicle existingVehicle = vehicleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Vehicle not found with id: " + id));
+        vehicleMapper.updateVehicleDTO(updateVehicleRequestDTO,existingVehicle);
+        Vehicle savedVehicle = vehicleRepository.save(existingVehicle);
+        return vehicleMapper.toVehicleResponseDTO(savedVehicle);
     }
 
     @Override
