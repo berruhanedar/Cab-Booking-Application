@@ -3,6 +3,8 @@ package com.berru.app.cabbookingapplication.controller;
 import com.berru.app.cabbookingapplication.dto.NewVehicleRequestDTO;
 import com.berru.app.cabbookingapplication.dto.PaginationResponse;
 import com.berru.app.cabbookingapplication.dto.VehicleResponseDTO;
+import com.berru.app.cabbookingapplication.enums.VehicleEnergyType;
+import com.berru.app.cabbookingapplication.enums.VehicleStatus;
 import com.berru.app.cabbookingapplication.enums.VehicleType;
 import com.berru.app.cabbookingapplication.service.VehicleService;
 import jakarta.validation.Valid;
@@ -48,17 +50,28 @@ public class VehicleController {
         return ResponseEntity.ok(vehicleService.listPaginated(pageNo, size));
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<List<VehicleResponseDTO>> searchVehicleByRsql(@RequestParam String query) {
-        List<VehicleResponseDTO> vehicleResponseDTOs = vehicleService.searchVehicleByRsql(query);
-        return ResponseEntity.ok(vehicleResponseDTOs);
-    }
-
     @GetMapping("/search/type/{type}")
     public ResponseEntity<List<VehicleResponseDTO>> listVehiclesByType(@PathVariable VehicleType type) {
         List<VehicleResponseDTO> vehicleResponseDTOS = vehicleService.listVehiclesByType(type);
         return ResponseEntity.ok(vehicleResponseDTOS);
     }
 
+    @GetMapping("/search/energy/{energyType}")
+    public ResponseEntity<List<VehicleResponseDTO>> listVehiclesByEnergy(@PathVariable VehicleEnergyType energyType) {
+        List<VehicleResponseDTO> vehicles = vehicleService.listVehiclesByEnergy(energyType);
+        return ResponseEntity.ok(vehicles);
+    }
+
+    @GetMapping("/search/status/{status}")
+    public ResponseEntity<List<VehicleResponseDTO>> listVehiclesByStatus(@PathVariable VehicleStatus status) {
+        List<VehicleResponseDTO> vehicles = vehicleService.listVehiclesByStatus(status);
+        return ResponseEntity.ok(vehicles);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<VehicleResponseDTO>> searchVehicleByRsql(@RequestParam String query) {
+        List<VehicleResponseDTO> vehicleResponseDTOs = vehicleService.searchVehicleByRsql(query);
+        return ResponseEntity.ok(vehicleResponseDTOs);
+    }
 
 }
