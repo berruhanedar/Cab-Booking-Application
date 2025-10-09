@@ -2,6 +2,7 @@ package com.berru.app.cabbookingapplication.controller;
 
 import com.berru.app.cabbookingapplication.dto.NewVehicleRequestDTO;
 import com.berru.app.cabbookingapplication.dto.PaginationResponse;
+import com.berru.app.cabbookingapplication.dto.UpdateVehicleRequestDTO;
 import com.berru.app.cabbookingapplication.dto.VehicleResponseDTO;
 import com.berru.app.cabbookingapplication.enums.VehicleEnergyType;
 import com.berru.app.cabbookingapplication.enums.VehicleStatus;
@@ -73,5 +74,14 @@ public class VehicleController {
         List<VehicleResponseDTO> vehicleResponseDTOs = vehicleService.searchVehicleByRsql(query);
         return ResponseEntity.ok(vehicleResponseDTOs);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<VehicleResponseDTO> updateVehicle(@PathVariable Integer id , @RequestBody @Valid UpdateVehicleRequestDTO updateVehicleRequestDTO) {
+        VehicleResponseDTO vehicleResponseDTO = vehicleService.updateVehicle(id, updateVehicleRequestDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(vehicleResponseDTO);
+    }
+
+
+
 
 }
