@@ -123,7 +123,9 @@ public class VehicleServiceImpl extends GenericRsqlService<Vehicle, VehicleRespo
     }
 
     @Override
+    @Transactional
     public void deleteVehicleById(Integer id) {
-
+        Vehicle vehicle = vehicleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Vehicle not found with id: " + id));
+        vehicleRepository.delete(vehicle);
     }
 }
