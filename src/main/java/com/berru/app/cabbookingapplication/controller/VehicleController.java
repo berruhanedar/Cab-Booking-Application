@@ -87,5 +87,9 @@ public class VehicleController {
         return ResponseEntity.ok(vehicleResponseDTO);
     }
 
-
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteVehicle(@PathVariable Integer id) {
+        vehicleService.deleteVehicleById(id);
+        return ResponseEntity.noContent().build();
+    }
 }
