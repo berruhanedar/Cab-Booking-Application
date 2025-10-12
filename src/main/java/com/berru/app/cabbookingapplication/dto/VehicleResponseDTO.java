@@ -10,6 +10,8 @@ import lombok.Data;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class VehicleResponseDTO {
 
+    private Integer id;
+
     private String plate;
 
     private String model;
