@@ -13,12 +13,13 @@ import java.util.Optional;
 
 @Repository
 public interface VehicleRepository extends JpaRepository<Vehicle, Integer>, JpaSpecificationExecutor<Vehicle> {
+
     Optional<Vehicle> findByPlate(String plate);
 
     List<Vehicle> findByType(VehicleType type);
 
-    List<Vehicle> findByEnergy(VehicleEnergyType energyType);
+    List<Vehicle> findByEnergyType(VehicleEnergyType energyType);
 
-    List<Vehicle> findyStatus (VehicleStatus  status);
+    List<Vehicle> findByStatus (VehicleStatus  status);
 
 }
