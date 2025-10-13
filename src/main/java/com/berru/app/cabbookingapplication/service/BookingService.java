@@ -21,6 +21,9 @@ public interface BookingService {
 
     void deleteBookingById(Integer id);
 
-    public Double calculateDriverRating(Integer driverId);
-
+    /**
+     * Booking tamamlandığında çağrılır.
+     * Driver'ın totalRides ve rating alanlarını günceller.
+     */
+    void completeBooking(Integer bookingId);
 }
