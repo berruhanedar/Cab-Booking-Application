@@ -2,6 +2,8 @@ package com.berru.app.cabbookingapplication.dto;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class DriverResponseDTO {
 
@@ -11,7 +13,7 @@ public class DriverResponseDTO {
 
     private String driverLicenseNumber;
 
-    private VehicleResponseDTO vehicle;
+    private List<VehicleResponseDTO> vehicles;
 
     private Double rating;
 
