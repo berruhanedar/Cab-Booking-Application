@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -27,7 +28,7 @@ public class Driver {
     private String driverLicenseNumber;
 
     @Column(name = "rating")
-    private Double rating = 5.0;
+    private Double rating = 0.0;
 
     @Column(name = "total_rides")
     private Integer totalRides = 0;
@@ -44,6 +45,7 @@ public class Driver {
     @Column(name = "availability", nullable = false)
     private DriverAvailability availability = DriverAvailability.OFFLINE;
 
-    @OneToMany(mappedBy = "driver")
-    private List<Vehicle> vehicles;
+    @OneToMany(mappedBy = "driver", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Vehicle> vehicles = new ArrayList<>();
+
 }
