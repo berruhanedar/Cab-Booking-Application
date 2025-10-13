@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
+@Transactional
 public class VehicleServiceImpl extends GenericRsqlService<Vehicle, VehicleResponseDTO> implements VehicleService {
 
     private final VehicleRepository vehicleRepository;
@@ -40,7 +41,6 @@ public class VehicleServiceImpl extends GenericRsqlService<Vehicle, VehicleRespo
     }
 
     @Override
-    @Transactional
     public VehicleResponseDTO createVehicle(NewVehicleRequestDTO newVehicleRequestDTO) {
         Vehicle vehicle = vehicleMapper.toVehicle(newVehicleRequestDTO);
         Vehicle savedVehicle = vehicleRepository.save(vehicle);
@@ -48,7 +48,7 @@ public class VehicleServiceImpl extends GenericRsqlService<Vehicle, VehicleRespo
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public VehicleResponseDTO getVehicleById(Integer id) {
         Vehicle vehicle = vehicleRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Vehicle not found with id: " + id));
@@ -56,14 +56,14 @@ public class VehicleServiceImpl extends GenericRsqlService<Vehicle, VehicleRespo
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public VehicleResponseDTO getVehicleByPlate(String plate) {
         Vehicle vehicle = vehicleRepository.findByPlate(plate).orElseThrow(() -> new ResourceNotFoundException("Vehicle not found with plate: " + plate));
         return vehicleMapper.toVehicleResponseDTO(vehicle);
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public PaginationResponse<VehicleResponseDTO> listPaginated(int pageNo, int size) {
         Pageable pageable = PageRequest.of(pageNo, size);
         Page<Vehicle> vehiclePage = vehicleRepository.findAll(pageable);
@@ -72,7 +72,7 @@ public class VehicleServiceImpl extends GenericRsqlService<Vehicle, VehicleRespo
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<VehicleResponseDTO> listVehiclesByType(VehicleType type) {
         List<Vehicle> vehicles = vehicleRepository.findByType(type);
         return vehicles.stream()
@@ -81,7 +81,7 @@ public class VehicleServiceImpl extends GenericRsqlService<Vehicle, VehicleRespo
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<VehicleResponseDTO> listVehiclesByEnergy(VehicleEnergyType energyType) {
         List<Vehicle> vehicles = vehicleRepository.findByEnergyType(energyType);
         return vehicles.stream()
@@ -90,7 +90,6 @@ public class VehicleServiceImpl extends GenericRsqlService<Vehicle, VehicleRespo
     }
 
     @Override
-    @Transactional
     public List<VehicleResponseDTO> listVehiclesByStatus(VehicleStatus status) {
         List<Vehicle> vehicles = vehicleRepository.findByStatus(status);
         return vehicles.stream()
