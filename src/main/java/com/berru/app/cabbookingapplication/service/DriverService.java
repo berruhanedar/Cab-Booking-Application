@@ -9,7 +9,7 @@ import java.util.List;
 @Service
 public interface DriverService {
 
-    DriverResponseDTO registerDriver(NewDriverRequestDTO newDriverRequestDTO);
+    DriverResponseDTO createDriver(NewDriverRequestDTO newDriverRequestDTO);
 
     DriverResponseDTO getDriverById(Integer id);
 
@@ -19,18 +19,22 @@ public interface DriverService {
 
     List<DriverResponseDTO> searchDriverByRsql(String query);
 
+    List<DriverResponseDTO> findDriversByRating(Double minRating);
+
+    List<DriverResponseDTO> findDriversByAvailability(DriverAvailability availability);
+
+    List<VehicleResponseDTO> getVehiclesByDriverId(Integer driverId);
+
     DriverResponseDTO updateDriver(Integer id, UpdateDriverRequestDTO updateDriverRequestDTO);
 
     DriverResponseDTO updateDriverLocation(Integer id, LocationResponseDTO locationUpdate);
 
-    void deleteDriverById(Integer id);
-
-    List<DriverResponseDTO> findDriversByRating(Double minRating);
-
-    DriverResponseDTO incrementTotalRides(Integer id);
-
     DriverResponseDTO updateDriverAvailability(Integer driverId, DriverAvailability availability);
 
-    // TODO: İleride araç atama/çıkarma işlemleri buraya eklenebilir
-    // Örn: updateDriverVehicle(Integer driverId, Integer vehicleId)
+    DriverResponseDTO addVehicleToDriver(Integer driverId, Integer vehicleId);
+
+    DriverResponseDTO removeVehicleFromDriver(Integer driverId, Integer vehicleId);
+
+    void deleteDriverById(Integer id);
+
 }
