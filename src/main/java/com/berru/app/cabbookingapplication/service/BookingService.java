@@ -21,4 +21,6 @@ public interface BookingService {
 
     void deleteBookingById(Integer id);
 
+    public Double calculateDriverRating(Integer driverId);
+
 }
