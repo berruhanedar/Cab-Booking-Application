@@ -6,6 +6,8 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class NewDriverRequestDTO {
 
@@ -17,8 +19,9 @@ public class NewDriverRequestDTO {
     @Pattern(regexp = "^[A-Z0-9]+$", message = "Driver license number must contain only uppercase letters and numbers")
     private String driverLicenseNumber;
 
-    @NotNull(message = "Vehicle info cannot be null")
-    private NewVehicleRequestDTO vehicle;
+    @NotNull(message = "Vehicle IDs cannot be null")
+    @Size(min = 1, message = "At least one vehicle must be assigned")
+    private List<Integer> vehicleIds;
 
     @NotNull(message = "Current location cannot be null")
     private LocationUpdateDTO currentLocation;
