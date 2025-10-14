@@ -2,28 +2,48 @@ package com.berru.app.cabbookingapplication.service.impl;
 
 import com.berru.app.cabbookingapplication.dto.*;
 import com.berru.app.cabbookingapplication.entity.Driver;
+import com.berru.app.cabbookingapplication.entity.User;
 import com.berru.app.cabbookingapplication.enums.DriverAvailability;
+import com.berru.app.cabbookingapplication.exception.DuplicateDriverProfileException;
 import com.berru.app.cabbookingapplication.mapper.DriverMapper;
 import com.berru.app.cabbookingapplication.repository.DriverRepository;
+import com.berru.app.cabbookingapplication.repository.UserRepository;
 import com.berru.app.cabbookingapplication.service.DriverService;
 import com.berru.app.cabbookingapplication.service.base.GenericRsqlService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional
 public class DriverServiceImpl  extends GenericRsqlService<Driver, DriverResponseDTO> implements DriverService {
 
     private final DriverRepository driverRepository;
+    private final DriverMapper driverMapper;
+    private final UserRepository userRepository;
 
-    public DriverServiceImpl(DriverRepository driverRepository, DriverMapper driverMapper) {
+    public DriverServiceImpl(DriverRepository driverRepository, DriverMapper driverMapper,UserRepository userRepository) {
         super(driverRepository,driverMapper :: toDriverResponseDTO);
         this.driverRepository = driverRepository;
+        this.driverMapper = driverMapper;
+        this.userRepository = userRepository;
     }
 
     @Override
     public DriverResponseDTO createDriver(NewDriverRequestDTO newDriverRequestDTO) {
-        return null;
+        User user = userRepository.findById(newDriverRequestDTO.getUserId())
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + newDriverRequestDTO.getUserId()));
+
+        if (driverRepository.existsByUserId(user.getId())) {
+            throw new DuplicateDriverProfileException("This user already has a driver profile.");
+        }
+
+        Driver driver = driverMapper.toDriver(newDriverRequestDTO);
+        driver.setUser(user);
+
+        Driver savedDriver = driverRepository.save(driver);
+        return  driverMapper.toDriverResponseDTO(savedDriver);
     }
 
     @Override
