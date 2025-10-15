@@ -55,8 +55,10 @@ public class DriverServiceImpl  extends GenericRsqlService<Driver, DriverRespons
     }
 
     @Override
+    @Transactional(readOnly = true)
     public DriverResponseDTO getDriverByUserId(Integer userId) {
-        return null;
+        Driver driver = driverRepository.findByUserId(userId).orElseThrow(()-> new RuntimeException("Driver not   found with ID: " + userId));
+        return  driverMapper.toDriverResponseDTO(driver);
     }
 
     @Override
