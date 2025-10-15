@@ -30,5 +30,9 @@ public class DriverController {
         return ResponseEntity.ok().body(driverResponseDTO);
     }
 
-
+    @GetMapping("/user-id/{userId}")
+    public ResponseEntity<DriverResponseDTO> getDriverByUserId(@PathVariable Integer userId) {
+        DriverResponseDTO driverResponseDTO = driverService.getDriverByUserId(userId);
+        return ResponseEntity.ok().body(driverResponseDTO);
+    }
 }
