@@ -13,6 +13,7 @@ import com.berru.app.cabbookingapplication.service.base.GenericRsqlService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 import java.util.List;
 
 @Service
@@ -47,8 +48,10 @@ public class DriverServiceImpl  extends GenericRsqlService<Driver, DriverRespons
     }
 
     @Override
+    @Transactional(readOnly = true)
     public DriverResponseDTO getDriverById(Integer id) {
-        return null;
+        Driver driver = driverRepository.findById(id).orElseThrow(()-> new RuntimeException("Driver not   found with ID: " + id));
+        return  driverMapper.toDriverResponseDTO(driver);
     }
 
     @Override
