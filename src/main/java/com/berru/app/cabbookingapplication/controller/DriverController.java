@@ -2,14 +2,17 @@ package com.berru.app.cabbookingapplication.controller;
 
 import com.berru.app.cabbookingapplication.dto.DriverResponseDTO;
 import com.berru.app.cabbookingapplication.dto.NewDriverRequestDTO;
+import com.berru.app.cabbookingapplication.dto.PaginationResponse;
 import com.berru.app.cabbookingapplication.service.DriverService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/api/driver")
+@RequestMapping("/api/drivers")
 public class DriverController {
 
     private final DriverService driverService;
@@ -24,15 +27,29 @@ public class DriverController {
         return ResponseEntity.status(HttpStatus.CREATED).body(driverResponseDTO);
     }
 
-    @GetMapping("/id/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<DriverResponseDTO> getDriverById(@PathVariable Integer id) {
         DriverResponseDTO driverResponseDTO = driverService.getDriverById(id);
-        return ResponseEntity.ok().body(driverResponseDTO);
+        return ResponseEntity.ok(driverResponseDTO);
     }
 
-    @GetMapping("/user-id/{userId}")
+    @GetMapping("/user/{userId}")
     public ResponseEntity<DriverResponseDTO> getDriverByUserId(@PathVariable Integer userId) {
         DriverResponseDTO driverResponseDTO = driverService.getDriverByUserId(userId);
-        return ResponseEntity.ok().body(driverResponseDTO);
+        return ResponseEntity.ok(driverResponseDTO);
     }
+
+    @GetMapping
+    public ResponseEntity<PaginationResponse<DriverResponseDTO>> listPaginated(@RequestParam(defaultValue = "0") int pageNo,
+                                                                 @RequestParam(defaultValue = "10") int size) {
+        PaginationResponse<DriverResponseDTO> paginationResponse = driverService.listPaginated(pageNo, size);
+        return ResponseEntity.ok(paginationResponse);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<DriverResponseDTO>> searchDriverByRsql(@RequestParam String query) {
+        List<DriverResponseDTO> driverResponseDTO = driverService.searchDriverByRsql(query);
+        return ResponseEntity.ok(driverResponseDTO);
+    }
+
 }
