@@ -3,13 +3,18 @@ package com.berru.app.cabbookingapplication.service.impl;
 import com.berru.app.cabbookingapplication.dto.*;
 import com.berru.app.cabbookingapplication.entity.Driver;
 import com.berru.app.cabbookingapplication.entity.User;
+import com.berru.app.cabbookingapplication.entity.Vehicle;
 import com.berru.app.cabbookingapplication.enums.DriverAvailability;
 import com.berru.app.cabbookingapplication.exception.DuplicateDriverProfileException;
 import com.berru.app.cabbookingapplication.mapper.DriverMapper;
+import com.berru.app.cabbookingapplication.mapper.PaginationMapper;
 import com.berru.app.cabbookingapplication.repository.DriverRepository;
 import com.berru.app.cabbookingapplication.repository.UserRepository;
 import com.berru.app.cabbookingapplication.service.DriverService;
 import com.berru.app.cabbookingapplication.service.base.GenericRsqlService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,12 +28,14 @@ public class DriverServiceImpl  extends GenericRsqlService<Driver, DriverRespons
     private final DriverRepository driverRepository;
     private final DriverMapper driverMapper;
     private final UserRepository userRepository;
+    private final PaginationMapper paginationMapper;
 
-    public DriverServiceImpl(DriverRepository driverRepository, DriverMapper driverMapper,UserRepository userRepository) {
+    public DriverServiceImpl(DriverRepository driverRepository, DriverMapper driverMapper,UserRepository userRepository, PaginationMapper paginationMapper) {
         super(driverRepository,driverMapper :: toDriverResponseDTO);
         this.driverRepository = driverRepository;
         this.driverMapper = driverMapper;
         this.userRepository = userRepository;
+        this.paginationMapper = paginationMapper;
     }
 
     @Override
@@ -62,13 +69,17 @@ public class DriverServiceImpl  extends GenericRsqlService<Driver, DriverRespons
     }
 
     @Override
+    @Transactional(readOnly = true)
     public PaginationResponse<DriverResponseDTO> listPaginated(int pageNo, int size) {
-        return null;
+        Pageable pageable = PageRequest.of(pageNo, size);
+        Page<Driver> driverPage = driverRepository.findAll(pageable);
+        return paginationMapper.toPaginationResponse(driverPage, driverMapper::toDriverResponseDTO);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<DriverResponseDTO> searchDriverByRsql(String query) {
-        return List.of();
+        return searchByRsql(query);
     }
 
     @Override
