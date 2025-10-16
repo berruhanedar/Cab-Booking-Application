@@ -41,7 +41,7 @@ public class DriverController {
 
     @GetMapping
     public ResponseEntity<PaginationResponse<DriverResponseDTO>> listPaginated(@RequestParam(defaultValue = "0") int pageNo,
-                                                                 @RequestParam(defaultValue = "10") int size) {
+                                                                               @RequestParam(defaultValue = "10") int size) {
         PaginationResponse<DriverResponseDTO> paginationResponse = driverService.listPaginated(pageNo, size);
         return ResponseEntity.ok(paginationResponse);
     }
@@ -52,4 +52,10 @@ public class DriverController {
         return ResponseEntity.ok(driverResponseDTO);
     }
 
+    @GetMapping("/rating")
+    public ResponseEntity<List<DriverResponseDTO>> findDriversByRating(@RequestParam(name = "minRating") Double minRating) {
+        List<DriverResponseDTO> driverResponseDTO = driverService.findDriversByRating(minRating);
+        return ResponseEntity.ok(driverResponseDTO);
+
+    }
 }
