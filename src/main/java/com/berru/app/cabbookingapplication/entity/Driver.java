@@ -1,6 +1,7 @@
 package com.berru.app.cabbookingapplication.entity;
 
 import com.berru.app.cabbookingapplication.enums.DriverAvailability;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,6 +22,7 @@ public class Driver {
     private Integer id;
 
     @OneToOne
+    @JsonManagedReference
     @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;
 
@@ -45,7 +47,8 @@ public class Driver {
     @Column(name = "availability", nullable = false)
     private DriverAvailability availability = DriverAvailability.OFFLINE;
 
-    @OneToMany(mappedBy = "driver", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "driver", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Vehicle> vehicles = new ArrayList<>();
 
 }
