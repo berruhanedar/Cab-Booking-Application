@@ -3,6 +3,7 @@ package com.berru.app.cabbookingapplication.controller;
 import com.berru.app.cabbookingapplication.dto.DriverResponseDTO;
 import com.berru.app.cabbookingapplication.dto.NewDriverRequestDTO;
 import com.berru.app.cabbookingapplication.dto.PaginationResponse;
+import com.berru.app.cabbookingapplication.enums.DriverAvailability;
 import com.berru.app.cabbookingapplication.service.DriverService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -56,6 +57,15 @@ public class DriverController {
     public ResponseEntity<List<DriverResponseDTO>> findDriversByRating(@RequestParam(name = "minRating") Double minRating) {
         List<DriverResponseDTO> driverResponseDTO = driverService.findDriversByRating(minRating);
         return ResponseEntity.ok(driverResponseDTO);
-
     }
+
+    @GetMapping("/search/availability/{availability}")
+    public ResponseEntity<List<DriverResponseDTO>> findDriversByAvailability(@PathVariable DriverAvailability availability) {
+        List<DriverResponseDTO> driverResponseDTO = driverService.findDriversByAvailability(availability);
+        return ResponseEntity.ok(driverResponseDTO);
+    }
+
+
+
+
 }
