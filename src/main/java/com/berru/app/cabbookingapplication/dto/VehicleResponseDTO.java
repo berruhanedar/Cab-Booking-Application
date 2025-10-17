@@ -24,6 +24,4 @@ public class VehicleResponseDTO {
 
     private VehicleStatus status;
 
-    private DriverResponseDTO driver;
-
 }
