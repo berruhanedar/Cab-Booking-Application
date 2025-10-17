@@ -6,8 +6,6 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
-import java.util.List;
-
 @Data
 public class NewDriverRequestDTO {
 
@@ -21,7 +19,7 @@ public class NewDriverRequestDTO {
 
     @NotNull(message = "Vehicle IDs cannot be null")
     @Size(min = 1, message = "At least one vehicle must be assigned")
-    private List<Integer> vehicleIds;
+    private Integer vehicleId;
 
     @NotNull(message = "Current location cannot be null")
     private LocationUpdateDTO currentLocation;
