@@ -1,9 +1,6 @@
 package com.berru.app.cabbookingapplication.controller;
 
-import com.berru.app.cabbookingapplication.dto.DriverResponseDTO;
-import com.berru.app.cabbookingapplication.dto.NewDriverRequestDTO;
-import com.berru.app.cabbookingapplication.dto.PaginationResponse;
-import com.berru.app.cabbookingapplication.dto.VehicleResponseDTO;
+import com.berru.app.cabbookingapplication.dto.*;
 import com.berru.app.cabbookingapplication.enums.DriverAvailability;
 import com.berru.app.cabbookingapplication.service.DriverService;
 import jakarta.validation.Valid;
@@ -71,4 +68,13 @@ public class DriverController {
         List<VehicleResponseDTO> vehicleResponseDTO = driverService.getVehiclesByDriverId(driverId);
         return ResponseEntity.ok(vehicleResponseDTO);
     }
+
+    @PutMapping("/update/driver/{id}")
+    public ResponseEntity<DriverResponseDTO> updateDriver(@PathVariable Integer id, @RequestBody @Valid UpdateDriverRequestDTO updateDriverRequestDTO) {
+        DriverResponseDTO driverResponseDTO = driverService.updateDriver(id, updateDriverRequestDTO);
+        return ResponseEntity.ok(driverResponseDTO);
+    }
+
+
+
 }
