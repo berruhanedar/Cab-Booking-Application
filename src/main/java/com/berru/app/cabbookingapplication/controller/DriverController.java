@@ -3,6 +3,7 @@ package com.berru.app.cabbookingapplication.controller;
 import com.berru.app.cabbookingapplication.dto.DriverResponseDTO;
 import com.berru.app.cabbookingapplication.dto.NewDriverRequestDTO;
 import com.berru.app.cabbookingapplication.dto.PaginationResponse;
+import com.berru.app.cabbookingapplication.dto.VehicleResponseDTO;
 import com.berru.app.cabbookingapplication.enums.DriverAvailability;
 import com.berru.app.cabbookingapplication.service.DriverService;
 import jakarta.validation.Valid;
@@ -65,7 +66,9 @@ public class DriverController {
         return ResponseEntity.ok(driverResponseDTO);
     }
 
-
-
-
+    @GetMapping("{driverId}/vehicles")
+    public ResponseEntity<List<VehicleResponseDTO>> getVehiclesByDriverId(@PathVariable Integer driverId) {
+        List<VehicleResponseDTO> vehicleResponseDTO = driverService.getVehiclesByDriverId(driverId);
+        return ResponseEntity.ok(vehicleResponseDTO);
+    }
 }
