@@ -78,4 +78,9 @@ public class BookingServiceImpl extends GenericRsqlService<BookingForm, BookingF
         BookingForm bookingForm = bookingFormRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Booking Form not found with id " + id));
         bookingFormRepository.delete(bookingForm);
     }
+
+    @Override
+    public void completeBooking(Integer bookingId) {
+
+    }
 }
