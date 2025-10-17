@@ -128,7 +128,10 @@ public class DriverServiceImpl  extends GenericRsqlService<Driver, DriverRespons
 
     @Override
     public DriverResponseDTO updateDriver(Integer id, UpdateDriverRequestDTO updateDriverRequestDTO) {
-        return null;
+        Driver existdriver = driverRepository.findById(id).orElseThrow(()-> new RuntimeException("Driver not   found with ID: " + id));
+        driverMapper.updateDriverFromDTO(updateDriverRequestDTO,existdriver);
+        Driver savedDriver = driverRepository.save(existdriver);
+        return driverMapper.toDriverResponseDTO(savedDriver);
     }
 
     @Override
