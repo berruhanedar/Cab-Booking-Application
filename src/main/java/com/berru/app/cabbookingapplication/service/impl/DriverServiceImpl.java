@@ -1,10 +1,11 @@
 package com.berru.app.cabbookingapplication.service.impl;
 
-import com.berru.app.cabbookingapplication.dto.*;
+import com.berru.app.cabbookingapplication.dto.*;import com.berru.app.cabbookingapplication.entity.Address;
 import com.berru.app.cabbookingapplication.entity.Driver;
 import com.berru.app.cabbookingapplication.entity.User;
 import com.berru.app.cabbookingapplication.entity.Vehicle;
 import com.berru.app.cabbookingapplication.enums.DriverAvailability;
+import com.berru.app.cabbookingapplication.enums.RoleStatus;
 import com.berru.app.cabbookingapplication.exception.DuplicateDriverProfileException;
 import com.berru.app.cabbookingapplication.mapper.DriverMapper;
 import com.berru.app.cabbookingapplication.mapper.PaginationMapper;
@@ -48,12 +49,23 @@ public class DriverServiceImpl  extends GenericRsqlService<Driver, DriverRespons
         User user = userRepository.findById(newDriverRequestDTO.getUserId())
                 .orElseThrow(() -> new RuntimeException("User not found with ID: " + newDriverRequestDTO.getUserId()));
 
+        if (user.getRole() != RoleStatus.DRIVER) {
+            throw new RuntimeException("User role must be DRIVER to create a driver profile.");
+        }
+
         if (driverRepository.existsByUserId(user.getId())) {
             throw new DuplicateDriverProfileException("This user already has a driver profile.");
         }
 
         Driver driver = driverMapper.toDriver(newDriverRequestDTO);
         driver.setUser(user);
+
+        Vehicle vehicle = vehicleRepository.findById(newDriverRequestDTO.getVehicleId())
+                .orElseThrow(() -> new RuntimeException("Vehicle not found with ID: " + newDriverRequestDTO.getVehicleId()));
+        vehicle.setDriver(driver);
+        driver.getVehicles().add(vehicle);
+
+        vehicleRepository.save(vehicle);
 
         Driver savedDriver = driverRepository.save(driver);
         return  driverMapper.toDriverResponseDTO(savedDriver);
