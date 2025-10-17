@@ -8,8 +8,10 @@ import com.berru.app.cabbookingapplication.enums.DriverAvailability;
 import com.berru.app.cabbookingapplication.exception.DuplicateDriverProfileException;
 import com.berru.app.cabbookingapplication.mapper.DriverMapper;
 import com.berru.app.cabbookingapplication.mapper.PaginationMapper;
+import com.berru.app.cabbookingapplication.mapper.VehicleMapper;
 import com.berru.app.cabbookingapplication.repository.DriverRepository;
 import com.berru.app.cabbookingapplication.repository.UserRepository;
+import com.berru.app.cabbookingapplication.repository.VehicleRepository;
 import com.berru.app.cabbookingapplication.service.DriverService;
 import com.berru.app.cabbookingapplication.service.base.GenericRsqlService;
 import org.springframework.data.domain.Page;
@@ -17,7 +19,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 
 import java.util.List;
 
@@ -29,13 +30,17 @@ public class DriverServiceImpl  extends GenericRsqlService<Driver, DriverRespons
     private final DriverMapper driverMapper;
     private final UserRepository userRepository;
     private final PaginationMapper paginationMapper;
+    private final VehicleRepository vehicleRepository;
+    private final VehicleMapper vehicleMapper;
 
-    public DriverServiceImpl(DriverRepository driverRepository, DriverMapper driverMapper,UserRepository userRepository, PaginationMapper paginationMapper) {
+    public DriverServiceImpl(DriverRepository driverRepository, DriverMapper driverMapper,UserRepository userRepository, PaginationMapper paginationMapper,VehicleRepository vehicleRepository,VehicleMapper vehicleMapper) {
         super(driverRepository,driverMapper :: toDriverResponseDTO);
         this.driverRepository = driverRepository;
         this.driverMapper = driverMapper;
         this.userRepository = userRepository;
         this.paginationMapper = paginationMapper;
+        this.vehicleRepository = vehicleRepository;
+        this.vehicleMapper = vehicleMapper;
     }
 
     @Override
@@ -83,6 +88,7 @@ public class DriverServiceImpl  extends GenericRsqlService<Driver, DriverRespons
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<DriverResponseDTO> findDriversByRating(Double minRating) {
         List<Driver> drivers = driverRepository.findByRatingGreaterThanEqual(minRating);
         return drivers.stream()
@@ -91,13 +97,21 @@ public class DriverServiceImpl  extends GenericRsqlService<Driver, DriverRespons
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<DriverResponseDTO> findDriversByAvailability(DriverAvailability availability) {
-        return List.of();
+        List<Driver> drivers = driverRepository.findByAvailability(availability);
+        return drivers.stream()
+                .map(driverMapper::toDriverResponseDTO)
+                .toList();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<VehicleResponseDTO> getVehiclesByDriverId(Integer driverId) {
-        return List.of();
+       List<Vehicle> vehicles = vehicleRepository.findByDriverId(driverId);
+       return vehicles.stream()
+               .map(vehicleMapper::toVehicleResponseDTO)
+               .toList();
     }
 
     @Override
