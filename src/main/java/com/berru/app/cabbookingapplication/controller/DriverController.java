@@ -75,6 +75,10 @@ public class DriverController {
         return ResponseEntity.ok(driverResponseDTO);
     }
 
-
+    @PatchMapping("/drivers/{id}/availability/{status}")
+    public ResponseEntity<DriverResponseDTO> updateDriverAvailability(@PathVariable Integer id, @PathVariable DriverAvailability availability) {
+        DriverResponseDTO driverResponseDTO = driverService.updateDriverAvailability(id, availability);
+        return ResponseEntity.ok(driverResponseDTO);
+    }
 
 }
