@@ -1,6 +1,6 @@
 package com.berru.app.cabbookingapplication.service.impl;
 
-import com.berru.app.cabbookingapplication.dto.*;import com.berru.app.cabbookingapplication.entity.Address;
+import com.berru.app.cabbookingapplication.dto.*;
 import com.berru.app.cabbookingapplication.entity.Driver;
 import com.berru.app.cabbookingapplication.entity.User;
 import com.berru.app.cabbookingapplication.entity.Vehicle;
@@ -25,7 +25,7 @@ import java.util.List;
 
 @Service
 @Transactional
-public class DriverServiceImpl  extends GenericRsqlService<Driver, DriverResponseDTO> implements DriverService {
+public class DriverServiceImpl extends GenericRsqlService<Driver, DriverResponseDTO> implements DriverService {
 
     private final DriverRepository driverRepository;
     private final DriverMapper driverMapper;
@@ -34,8 +34,8 @@ public class DriverServiceImpl  extends GenericRsqlService<Driver, DriverRespons
     private final VehicleRepository vehicleRepository;
     private final VehicleMapper vehicleMapper;
 
-    public DriverServiceImpl(DriverRepository driverRepository, DriverMapper driverMapper,UserRepository userRepository, PaginationMapper paginationMapper,VehicleRepository vehicleRepository,VehicleMapper vehicleMapper) {
-        super(driverRepository,driverMapper :: toDriverResponseDTO);
+    public DriverServiceImpl(DriverRepository driverRepository, DriverMapper driverMapper, UserRepository userRepository, PaginationMapper paginationMapper, VehicleRepository vehicleRepository, VehicleMapper vehicleMapper) {
+        super(driverRepository, driverMapper::toDriverResponseDTO);
         this.driverRepository = driverRepository;
         this.driverMapper = driverMapper;
         this.userRepository = userRepository;
@@ -68,21 +68,21 @@ public class DriverServiceImpl  extends GenericRsqlService<Driver, DriverRespons
         vehicleRepository.save(vehicle);
 
         Driver savedDriver = driverRepository.save(driver);
-        return  driverMapper.toDriverResponseDTO(savedDriver);
+        return driverMapper.toDriverResponseDTO(savedDriver);
     }
 
     @Override
     @Transactional(readOnly = true)
     public DriverResponseDTO getDriverById(Integer id) {
-        Driver driver = driverRepository.findById(id).orElseThrow(()-> new RuntimeException("Driver not   found with ID: " + id));
-        return  driverMapper.toDriverResponseDTO(driver);
+        Driver driver = driverRepository.findById(id).orElseThrow(() -> new RuntimeException("Driver not   found with ID: " + id));
+        return driverMapper.toDriverResponseDTO(driver);
     }
 
     @Override
     @Transactional(readOnly = true)
     public DriverResponseDTO getDriverByUserId(Integer userId) {
-        Driver driver = driverRepository.findByUserId(userId).orElseThrow(()-> new RuntimeException("Driver not   found with ID: " + userId));
-        return  driverMapper.toDriverResponseDTO(driver);
+        Driver driver = driverRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("Driver not   found with ID: " + userId));
+        return driverMapper.toDriverResponseDTO(driver);
     }
 
     @Override
@@ -120,16 +120,16 @@ public class DriverServiceImpl  extends GenericRsqlService<Driver, DriverRespons
     @Override
     @Transactional(readOnly = true)
     public List<VehicleResponseDTO> getVehiclesByDriverId(Integer driverId) {
-       List<Vehicle> vehicles = vehicleRepository.findByDriverId(driverId);
-       return vehicles.stream()
-               .map(vehicleMapper::toVehicleResponseDTO)
-               .toList();
+        List<Vehicle> vehicles = vehicleRepository.findByDriverId(driverId);
+        return vehicles.stream()
+                .map(vehicleMapper::toVehicleResponseDTO)
+                .toList();
     }
 
     @Override
     public DriverResponseDTO updateDriver(Integer id, UpdateDriverRequestDTO updateDriverRequestDTO) {
-        Driver existdriver = driverRepository.findById(id).orElseThrow(()-> new RuntimeException("Driver not   found with ID: " + id));
-        driverMapper.updateDriverFromDTO(updateDriverRequestDTO,existdriver);
+        Driver existdriver = driverRepository.findById(id).orElseThrow(() -> new RuntimeException("Driver not   found with ID: " + id));
+        driverMapper.updateDriverFromDTO(updateDriverRequestDTO, existdriver);
         Driver savedDriver = driverRepository.save(existdriver);
         return driverMapper.toDriverResponseDTO(savedDriver);
     }
@@ -141,7 +141,10 @@ public class DriverServiceImpl  extends GenericRsqlService<Driver, DriverRespons
 
     @Override
     public DriverResponseDTO updateDriverAvailability(Integer driverId, DriverAvailability availability) {
-        return null;
+        Driver driver = driverRepository.findById(driverId).orElseThrow(() -> new RuntimeException("Driver not   found with ID: " + driverId));
+        driver.setAvailability(availability);
+        Driver updatedDriver = driverRepository.save(driver);
+        return driverMapper.toDriverResponseDTO(updatedDriver);
     }
 
     @Override
