@@ -6,7 +6,9 @@ import com.berru.app.cabbookingapplication.entity.User;
 import com.berru.app.cabbookingapplication.entity.Vehicle;
 import com.berru.app.cabbookingapplication.enums.DriverAvailability;
 import com.berru.app.cabbookingapplication.enums.RoleStatus;
+import com.berru.app.cabbookingapplication.exception.DuplicateAssignmentException;
 import com.berru.app.cabbookingapplication.exception.DuplicateDriverProfileException;
+import com.berru.app.cabbookingapplication.exception.ResourceNotFoundException;
 import com.berru.app.cabbookingapplication.mapper.DriverMapper;
 import com.berru.app.cabbookingapplication.mapper.PaginationMapper;
 import com.berru.app.cabbookingapplication.mapper.VehicleMapper;
@@ -47,10 +49,10 @@ public class DriverServiceImpl extends GenericRsqlService<Driver, DriverResponse
     @Override
     public DriverResponseDTO createDriver(NewDriverRequestDTO newDriverRequestDTO) {
         User user = userRepository.findById(newDriverRequestDTO.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found with ID: " + newDriverRequestDTO.getUserId()));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + newDriverRequestDTO.getUserId()));
 
         if (user.getRole() != RoleStatus.DRIVER) {
-            throw new RuntimeException("User role must be DRIVER to create a driver profile.");
+            throw new ResourceNotFoundException("User role must be DRIVER to create a driver profile.");
         }
 
         if (driverRepository.existsByUserId(user.getId())) {
@@ -61,7 +63,7 @@ public class DriverServiceImpl extends GenericRsqlService<Driver, DriverResponse
         driver.setUser(user);
 
         Vehicle vehicle = vehicleRepository.findById(newDriverRequestDTO.getVehicleId())
-                .orElseThrow(() -> new RuntimeException("Vehicle not found with ID: " + newDriverRequestDTO.getVehicleId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Vehicle not found with ID: " + newDriverRequestDTO.getVehicleId()));
         vehicle.setDriver(driver);
         driver.getVehicles().add(vehicle);
 
@@ -74,14 +76,14 @@ public class DriverServiceImpl extends GenericRsqlService<Driver, DriverResponse
     @Override
     @Transactional(readOnly = true)
     public DriverResponseDTO getDriverById(Integer id) {
-        Driver driver = driverRepository.findById(id).orElseThrow(() -> new RuntimeException("Driver not   found with ID: " + id));
+        Driver driver = driverRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Driver not   found with ID: " + id));
         return driverMapper.toDriverResponseDTO(driver);
     }
 
     @Override
     @Transactional(readOnly = true)
     public DriverResponseDTO getDriverByUserId(Integer userId) {
-        Driver driver = driverRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("Driver not   found with ID: " + userId));
+        Driver driver = driverRepository.findByUserId(userId).orElseThrow(() -> new ResourceNotFoundException("Driver not   found with ID: " + userId));
         return driverMapper.toDriverResponseDTO(driver);
     }
 
@@ -128,7 +130,7 @@ public class DriverServiceImpl extends GenericRsqlService<Driver, DriverResponse
 
     @Override
     public DriverResponseDTO updateDriver(Integer id, UpdateDriverRequestDTO updateDriverRequestDTO) {
-        Driver existdriver = driverRepository.findById(id).orElseThrow(() -> new RuntimeException("Driver not   found with ID: " + id));
+        Driver existdriver = driverRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Driver not   found with ID: " + id));
         driverMapper.updateDriverFromDTO(updateDriverRequestDTO, existdriver);
         Driver savedDriver = driverRepository.save(existdriver);
         return driverMapper.toDriverResponseDTO(savedDriver);
@@ -141,7 +143,7 @@ public class DriverServiceImpl extends GenericRsqlService<Driver, DriverResponse
 
     @Override
     public DriverResponseDTO updateDriverAvailability(Integer driverId, DriverAvailability availability) {
-        Driver driver = driverRepository.findById(driverId).orElseThrow(() -> new RuntimeException("Driver not   found with ID: " + driverId));
+        Driver driver = driverRepository.findById(driverId).orElseThrow(() -> new ResourceNotFoundException("Driver not   found with ID: " + driverId));
         driver.setAvailability(availability);
         Driver updatedDriver = driverRepository.save(driver);
         return driverMapper.toDriverResponseDTO(updatedDriver);
@@ -149,7 +151,16 @@ public class DriverServiceImpl extends GenericRsqlService<Driver, DriverResponse
 
     @Override
     public DriverResponseDTO addVehicleToDriver(Integer driverId, Integer vehicleId) {
-        return null;
+        Vehicle vehicle = vehicleRepository.findById(vehicleId).orElseThrow(() -> new ResourceNotFoundException("Vehicle not found with ID: " + vehicleId));
+        Driver driver = driverRepository.findById(driverId).orElseThrow(() -> new ResourceNotFoundException("Driver not found with ID: " + driverId));
+        if (driver.getVehicles().contains(vehicle)) {
+            throw new DuplicateAssignmentException("Vehicle already assigned to this driver");
+        }
+        driver.getVehicles().add(vehicle);
+        vehicle.setDriver(driver);
+        Driver updatedDriver = driverRepository.save(driver);
+        return driverMapper.toDriverResponseDTO(updatedDriver);
+
     }
 
     @Override
