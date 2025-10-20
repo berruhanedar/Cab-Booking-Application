@@ -81,4 +81,9 @@ public class DriverController {
         return ResponseEntity.ok(driverResponseDTO);
     }
 
+    @PostMapping("/{driverId}/vehicles/{vehicleId}")
+    public ResponseEntity<DriverResponseDTO> addVehicleToDriver(@PathVariable Integer driverId, @PathVariable Integer vehicleId) {
+        DriverResponseDTO driverResponseDTO = driverService.addVehicleToDriver(driverId, vehicleId);
+        return ResponseEntity.ok(driverResponseDTO);
+    }
 }
