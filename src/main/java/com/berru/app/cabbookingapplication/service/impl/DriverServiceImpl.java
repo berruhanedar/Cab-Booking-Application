@@ -165,7 +165,17 @@ public class DriverServiceImpl extends GenericRsqlService<Driver, DriverResponse
 
     @Override
     public DriverResponseDTO removeVehicleFromDriver(Integer driverId, Integer vehicleId) {
-        return null;
+        Driver driver = driverRepository.findById(driverId)
+                .orElseThrow(() -> new ResourceNotFoundException("Driver not found with ID: " + driverId));
+        Vehicle vehicle = driver.getVehicles().stream()
+                .filter(v -> v.getId().equals(vehicleId))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("The specified vehicle is not assigned to this driver."));
+        driver.getVehicles().remove(vehicle);
+        vehicle.setDriver(null);
+
+        vehicleRepository.save(vehicle);
+        return driverMapper.toDriverResponseDTO(driverRepository.save(driver));
     }
 
     @Override
