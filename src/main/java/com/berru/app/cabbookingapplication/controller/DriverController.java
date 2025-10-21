@@ -86,4 +86,10 @@ public class DriverController {
         DriverResponseDTO driverResponseDTO = driverService.addVehicleToDriver(driverId, vehicleId);
         return ResponseEntity.ok(driverResponseDTO);
     }
+
+    @DeleteMapping("/{driverId}/vehicles/{vehicleId}")
+    public ResponseEntity<Void> removeVehicleFromDriver(@PathVariable Integer driverId, @PathVariable Integer vehicleId) {
+        driverService.removeVehicleFromDriver(driverId, vehicleId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }
