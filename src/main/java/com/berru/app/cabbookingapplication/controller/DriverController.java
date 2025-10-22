@@ -92,4 +92,10 @@ public class DriverController {
         driverService.removeVehicleFromDriver(driverId, vehicleId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
+    @DeleteMapping("/{driverId}")
+    public ResponseEntity<Void> deleteDriver(@PathVariable Integer driverId) {
+        driverService.deleteDriverById(driverId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }

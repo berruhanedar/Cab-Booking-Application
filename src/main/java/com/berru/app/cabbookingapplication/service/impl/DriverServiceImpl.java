@@ -180,6 +180,7 @@ public class DriverServiceImpl extends GenericRsqlService<Driver, DriverResponse
 
     @Override
     public void deleteDriverById(Integer id) {
-
+        Driver driver = driverRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Driver not found with ID: " + id));
+        driverRepository.delete(driver);
     }
 }
