@@ -29,7 +29,7 @@ public class Driver {
     @Column(name = "driver_license_number", nullable = false, unique = true)
     private String driverLicenseNumber;
 
-    @Column(name = "rating")
+    @Column(name = "average_rating")
     private Double rating = 0.0;
 
     @Column(name = "total_rides")
@@ -50,5 +50,11 @@ public class Driver {
     @OneToMany(mappedBy = "driver", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Vehicle> vehicles = new ArrayList<>();
+
+    @OneToMany(mappedBy = "driver", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<Rating> ratings = new ArrayList<>();
+
+
 
 }
