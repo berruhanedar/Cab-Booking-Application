@@ -17,7 +17,7 @@ public interface BookingService {
 
     List<BookingFormResponseDTO> searchBookingByRsql(String query);
 
-    BookingFormResponseDTO updateBooking(Integer id , UpdateBookingFormRequestDTO updateBookingFormRequestDTO);
+    BookingFormResponseDTO updateBooking(Integer id, UpdateBookingFormRequestDTO updateBookingFormRequestDTO);
 
     void deleteBookingById(Integer id);
 
@@ -26,4 +26,10 @@ public interface BookingService {
      * Driver'ın totalRides ve rating alanlarını günceller.
      */
     void completeBooking(Integer bookingId);
+
+    /**
+     * Booking tamamlandığında eğer kullanıcı tip (bahşiş) ve rating verirse,
+     * RatingService ve PaymentService çağrılarak işlem yapılır.
+     */
+    BookingFormResponseDTO completeBookingWithRating(Integer bookingId, Double ratingValue, Double tipAmount, String feedback);
 }
