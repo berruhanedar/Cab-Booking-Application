@@ -137,9 +137,10 @@ public class DriverServiceImpl extends GenericRsqlService<Driver, DriverResponse
     }
 
     @Override
-    public DriverResponseDTO updateDriverLocation(Integer id, LocationResponseDTO locationUpdate) {
+    public DriverResponseDTO updateDriverLocation(Integer id, UpdateLocationRequestDTO locationUpdate) {
         return null;
     }
+
 
     @Override
     public DriverResponseDTO updateDriverAvailability(Integer driverId, DriverAvailability availability) {

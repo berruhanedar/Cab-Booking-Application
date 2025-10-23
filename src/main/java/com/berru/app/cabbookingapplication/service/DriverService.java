@@ -27,7 +27,7 @@ public interface DriverService {
 
     DriverResponseDTO updateDriver(Integer id, UpdateDriverRequestDTO updateDriverRequestDTO);
 
-    DriverResponseDTO updateDriverLocation(Integer id, LocationResponseDTO locationUpdate);
+    DriverResponseDTO updateDriverLocation(Integer id, UpdateLocationRequestDTO locationUpdate);
 
     DriverResponseDTO updateDriverAvailability(Integer driverId, DriverAvailability availability);
 
