@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LocationEmbeddable {
+public class Location {
 
     private Double latitude;
 

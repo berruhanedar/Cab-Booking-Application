@@ -2,7 +2,7 @@ package com.berru.app.cabbookingapplication.dto;
 
 import jakarta.validation.constraints.*;
 
-public class LocationUpdateDTO {
+public class UpdateLocationRequestDTO {
 
     @NotNull(message = "Latitude cannot be null")
     @DecimalMin(value = "-90.0", message = "Latitude must be between -90 and 90")
