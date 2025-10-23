@@ -41,7 +41,7 @@ public class Driver {
             @AttributeOverride(name = "longitude", column = @Column(name = "current_longitude")),
             @AttributeOverride(name = "address", column = @Column(name = "current_address"))
     })
-    private LocationEmbeddable currentLocation;
+    private Location currentLocation;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "availability", nullable = false)

@@ -22,6 +22,6 @@ public class NewDriverRequestDTO {
     private Integer vehicleId;
 
     @NotNull(message = "Current location cannot be null")
-    private LocationUpdateDTO currentLocation;
+    private UpdateLocationRequestDTO currentLocation;
 
 }
