@@ -41,7 +41,7 @@ public class Driver {
             @AttributeOverride(name = "longitude", column = @Column(name = "current_longitude")),
             @AttributeOverride(name = "address", column = @Column(name = "current_address"))
     })
-    private Location currentLocation;
+    private Location currentLocation = new Location();
 
     @Enumerated(EnumType.STRING)
     @Column(name = "availability", nullable = false)
@@ -54,7 +54,5 @@ public class Driver {
     @OneToMany(mappedBy = "driver", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Rating> ratings = new ArrayList<>();
-
-
 
 }
