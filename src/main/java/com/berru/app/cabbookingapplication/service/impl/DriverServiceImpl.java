@@ -10,6 +10,7 @@ import com.berru.app.cabbookingapplication.exception.DuplicateAssignmentExceptio
 import com.berru.app.cabbookingapplication.exception.DuplicateDriverProfileException;
 import com.berru.app.cabbookingapplication.exception.ResourceNotFoundException;
 import com.berru.app.cabbookingapplication.mapper.DriverMapper;
+import com.berru.app.cabbookingapplication.mapper.LocationMapper;
 import com.berru.app.cabbookingapplication.mapper.PaginationMapper;
 import com.berru.app.cabbookingapplication.mapper.VehicleMapper;
 import com.berru.app.cabbookingapplication.repository.DriverRepository;
@@ -35,8 +36,9 @@ public class DriverServiceImpl extends GenericRsqlService<Driver, DriverResponse
     private final PaginationMapper paginationMapper;
     private final VehicleRepository vehicleRepository;
     private final VehicleMapper vehicleMapper;
+    private final LocationMapper locationMapper;
 
-    public DriverServiceImpl(DriverRepository driverRepository, DriverMapper driverMapper, UserRepository userRepository, PaginationMapper paginationMapper, VehicleRepository vehicleRepository, VehicleMapper vehicleMapper) {
+    public DriverServiceImpl(DriverRepository driverRepository, DriverMapper driverMapper, UserRepository userRepository, PaginationMapper paginationMapper, VehicleRepository vehicleRepository, VehicleMapper vehicleMapper, LocationMapper locationMapper) {
         super(driverRepository, driverMapper::toDriverResponseDTO);
         this.driverRepository = driverRepository;
         this.driverMapper = driverMapper;
@@ -44,6 +46,7 @@ public class DriverServiceImpl extends GenericRsqlService<Driver, DriverResponse
         this.paginationMapper = paginationMapper;
         this.vehicleRepository = vehicleRepository;
         this.vehicleMapper = vehicleMapper;
+        this.locationMapper = locationMapper;
     }
 
     @Override
@@ -138,9 +141,12 @@ public class DriverServiceImpl extends GenericRsqlService<Driver, DriverResponse
 
     @Override
     public DriverResponseDTO updateDriverLocation(Integer id, UpdateLocationRequestDTO locationUpdate) {
-        return null;
+        Driver driver = driverRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Driver not found with ID: " + id));
+        locationMapper.updateEmbeddableFromDTO(locationUpdate, driver.getCurrentLocation());
+        Driver updatedDriver = driverRepository.save(driver);
+        return driverMapper.toDriverResponseDTO(updatedDriver);
     }
-
 
     @Override
     public DriverResponseDTO updateDriverAvailability(Integer driverId, DriverAvailability availability) {
