@@ -69,21 +69,21 @@ public class DriverController {
         return ResponseEntity.ok(vehicleResponseDTO);
     }
 
-    @PutMapping("/update/driver/{id}")
-    public ResponseEntity<DriverResponseDTO> updateDriver(@PathVariable Integer id, @RequestBody @Valid UpdateDriverRequestDTO updateDriverRequestDTO) {
-        DriverResponseDTO driverResponseDTO = driverService.updateDriver(id, updateDriverRequestDTO);
+    @PutMapping("/update/driver/{driverId}")
+    public ResponseEntity<DriverResponseDTO> updateDriver(@PathVariable Integer driverId, @RequestBody @Valid UpdateDriverRequestDTO updateDriverRequestDTO) {
+        DriverResponseDTO driverResponseDTO = driverService.updateDriver(driverId, updateDriverRequestDTO);
         return ResponseEntity.ok(driverResponseDTO);
     }
 
-    @PutMapping("/{id}/location")
-    public ResponseEntity<DriverResponseDTO> updateDriverLocation(@PathVariable Integer id, @RequestBody @Valid UpdateLocationRequestDTO locationUpdate) {
-        DriverResponseDTO driverResponseDTO = driverService.updateDriverLocation(id, locationUpdate);
+    @PutMapping("/{driverId}/location")
+    public ResponseEntity<DriverResponseDTO> updateDriverLocation(@PathVariable Integer driverId, @RequestBody @Valid UpdateLocationRequestDTO locationUpdate) {
+        DriverResponseDTO driverResponseDTO = driverService.updateDriverLocation(driverId, locationUpdate);
         return ResponseEntity.ok(driverResponseDTO);
     }
 
-    @PatchMapping("/drivers/{id}/availability/{availability}")
-    public ResponseEntity<DriverResponseDTO> updateDriverAvailability(@PathVariable Integer id, @PathVariable DriverAvailability availability) {
-        DriverResponseDTO driverResponseDTO = driverService.updateDriverAvailability(id, availability);
+    @PutMapping("/{driverId}/availability/{availability}")
+    public ResponseEntity<DriverResponseDTO> updateDriverAvailability(@PathVariable Integer driverId, @PathVariable DriverAvailability availability) {
+        DriverResponseDTO driverResponseDTO = driverService.updateDriverAvailability(driverId, availability);
         return ResponseEntity.ok(driverResponseDTO);
     }
 
