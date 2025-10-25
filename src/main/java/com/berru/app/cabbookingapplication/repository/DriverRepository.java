@@ -16,7 +16,7 @@ public interface DriverRepository extends JpaRepository<Driver, Integer>, JpaSpe
 
     Optional<Driver> findByUserId(Integer userId);
 
-    List<Driver> findByRatingGreaterThanEqual(Double rating);
+    List<Driver> findByAverageRatingGreaterThanEqual(Double averageRating);
 
     List<Driver> findByAvailability(DriverAvailability availability);
 
