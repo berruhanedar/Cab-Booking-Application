@@ -107,7 +107,7 @@ public class DriverServiceImpl extends GenericRsqlService<Driver, DriverResponse
     @Override
     @Transactional(readOnly = true)
     public List<DriverResponseDTO> findDriversByRating(Double minRating) {
-        List<Driver> drivers = driverRepository.findByRatingGreaterThanEqual(minRating);
+        List<Driver> drivers = driverRepository.findByAverageRatingGreaterThanEqual(minRating);
         return drivers.stream()
                 .map(driverMapper::toDriverResponseDTO)
                 .toList();
