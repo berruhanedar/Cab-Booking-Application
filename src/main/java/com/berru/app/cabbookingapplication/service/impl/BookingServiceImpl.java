@@ -83,4 +83,9 @@ public class BookingServiceImpl extends GenericRsqlService<BookingForm, BookingF
     public void completeBooking(Integer bookingId) {
 
     }
+
+    @Override
+    public BookingFormResponseDTO completeBookingWithRating(Integer bookingId, Double ratingValue, Double tipAmount, String feedback) {
+        return null;
+    }
 }
