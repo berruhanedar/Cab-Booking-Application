@@ -30,7 +30,7 @@ public class Driver {
     private String driverLicenseNumber;
 
     @Column(name = "average_rating")
-    private Double rating = 0.0;
+    private Double averageRating = 0.0;
 
     @Column(name = "total_rides")
     private Integer totalRides = 0;
@@ -45,7 +45,7 @@ public class Driver {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "availability", nullable = false)
-    private DriverAvailability availability = DriverAvailability.OFFLINE;
+    private DriverAvailability availability = DriverAvailability.AVAILABLE;
 
     @OneToMany(mappedBy = "driver", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonManagedReference

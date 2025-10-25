@@ -1,5 +1,6 @@
 package com.berru.app.cabbookingapplication.dto;
 
+import com.berru.app.cabbookingapplication.enums.DriverAvailability;
 import lombok.Data;
 
 import java.util.List;
@@ -13,9 +14,11 @@ public class DriverResponseDTO {
 
     private String driverLicenseNumber;
 
+    private DriverAvailability availability;
+
     private List<VehicleResponseDTO> vehicles;
 
-    private Double rating;
+    private Double averageRating;
 
     private Integer totalRides;
 
