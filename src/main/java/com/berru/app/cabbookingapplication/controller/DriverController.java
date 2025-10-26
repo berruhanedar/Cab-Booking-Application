@@ -1,7 +1,9 @@
 package com.berru.app.cabbookingapplication.controller;
 
 import com.berru.app.cabbookingapplication.dto.*;
+import com.berru.app.cabbookingapplication.enums.BookingCancelledBy;
 import com.berru.app.cabbookingapplication.enums.DriverAvailability;
+import com.berru.app.cabbookingapplication.service.BookingService;
 import com.berru.app.cabbookingapplication.service.DriverService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -15,9 +17,11 @@ import java.util.List;
 public class DriverController {
 
     private final DriverService driverService;
+    private final BookingService bookingService;
 
-    public DriverController(DriverService driverService) {
+    public DriverController(DriverService driverService, BookingService bookingService) {
         this.driverService = driverService;
+        this.bookingService = bookingService;
     }
 
     @PostMapping
@@ -104,4 +108,39 @@ public class DriverController {
         driverService.deleteDriverById(driverId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
+    @GetMapping("/available-bookings")
+    public ResponseEntity<List<BookingResponseDTO>> getAvailableBookings() {
+        List<BookingResponseDTO> availableBookings = bookingService.getAvailableBookings();
+        return ResponseEntity.ok(availableBookings);
+    }
+
+    @PutMapping("/bookings/{bookingId}/accept")
+    public ResponseEntity<BookingResponseDTO> acceptBooking(
+            @PathVariable Integer bookingId,
+            @RequestParam Integer driverId
+    ) {
+        BookingResponseDTO response = bookingService.acceptBooking(bookingId, driverId);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/bookings/{bookingId}/complete")
+    public ResponseEntity<BookingResponseDTO> completeBooking(@PathVariable Integer bookingId) {
+        BookingResponseDTO response = bookingService.completeBooking(bookingId);
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/{driverId}/bookings/{bookingId}/cancel")
+    public ResponseEntity<BookingResponseDTO> cancelBookingByDriver(
+            @PathVariable Integer driverId,
+            @PathVariable Integer bookingId) {
+        BookingResponseDTO response = bookingService.cancelBooking(bookingId, BookingCancelledBy.DRIVER);
+        return ResponseEntity.ok(response);
+    }
+
+
+
+
+
+
 }
