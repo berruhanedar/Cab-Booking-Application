@@ -1,11 +1,10 @@
 package com.berru.app.cabbookingapplication.controller;
 
-import com.berru.app.cabbookingapplication.dto.NewUserRequestDTO;
-import com.berru.app.cabbookingapplication.dto.PaginationResponse;
-import com.berru.app.cabbookingapplication.dto.UpdateUserRequestDTO;
-import com.berru.app.cabbookingapplication.dto.UserResponseDTO;
+import com.berru.app.cabbookingapplication.dto.*;
+import com.berru.app.cabbookingapplication.enums.BookingCancelledBy;
 import com.berru.app.cabbookingapplication.enums.RoleStatus;
 import com.berru.app.cabbookingapplication.enums.UserStatus;
+import com.berru.app.cabbookingapplication.service.BookingService;
 import com.berru.app.cabbookingapplication.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -19,9 +18,11 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final BookingService bookingService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, BookingService bookingService) {
         this.userService = userService;
+        this.bookingService = bookingService;
     }
 
     @PostMapping
@@ -86,5 +87,13 @@ public class UserController {
             @RequestParam UserStatus newStatus) {
         UserResponseDTO userResponseDTO = userService.changeUserStatus(id, newStatus);
         return ResponseEntity.ok(userResponseDTO);
+    }
+
+    @PatchMapping("/{userId}/bookings/{bookingId}/cancel")
+    public ResponseEntity<BookingResponseDTO> cancelBookingByUser(
+            @PathVariable Integer userId,
+            @PathVariable Integer bookingId) {
+        BookingResponseDTO response = bookingService.cancelBooking(bookingId, BookingCancelledBy.CUSTOMER);
+        return ResponseEntity.ok(response);
     }
 }
