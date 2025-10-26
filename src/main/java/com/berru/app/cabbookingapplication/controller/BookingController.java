@@ -1,12 +1,9 @@
 package com.berru.app.cabbookingapplication.controller;
 
-import com.berru.app.cabbookingapplication.dto.BookingFormResponseDTO;
-import com.berru.app.cabbookingapplication.dto.NewBookingFormRequestDTO;
-import com.berru.app.cabbookingapplication.dto.PaginationResponse;
-import com.berru.app.cabbookingapplication.dto.UpdateBookingFormRequestDTO;
-import com.berru.app.cabbookingapplication.service.impl.BookingServiceImpl;
-import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
+import com.berru.app.cabbookingapplication.dto.BookingResponseDTO;
+import com.berru.app.cabbookingapplication.dto.NewBookingRequestDTO;
+import com.berru.app.cabbookingapplication.enums.BookingCancelledBy;
+import com.berru.app.cabbookingapplication.service.BookingService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,47 +13,55 @@ import java.util.List;
 @RequestMapping("/api/booking")
 public class BookingController {
 
-    private final BookingServiceImpl bookingServiceImpl;
+    private final BookingService bookingService;
 
-    public BookingController(BookingServiceImpl bookingServiceImpl) {
-        this.bookingServiceImpl = bookingServiceImpl;
+    public BookingController(BookingService bookingService) {
+        this.bookingService = bookingService;
     }
 
     @PostMapping
-    public ResponseEntity<BookingFormResponseDTO> createBooking(@RequestBody @Valid NewBookingFormRequestDTO newBookingFormRequestDTO) {
-        BookingFormResponseDTO bookingFormResponseDTO = bookingServiceImpl.createBooking(newBookingFormRequestDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(bookingFormResponseDTO);
+    public BookingResponseDTO createBooking(@RequestBody NewBookingRequestDTO newBookingRequestDTO) {
+        return bookingService.createBooking(newBookingRequestDTO);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<BookingFormResponseDTO> getByIdBooking(@PathVariable Integer id) {
-        BookingFormResponseDTO bookingFormResponseDTO = bookingServiceImpl.getAllBookings(id);
-        return ResponseEntity.ok(bookingFormResponseDTO);
+    @GetMapping("/available")
+    public List<BookingResponseDTO> getAvailableBookings() {
+        return bookingService.getAvailableBookings();
     }
 
-    @GetMapping
-    public ResponseEntity<PaginationResponse<BookingFormResponseDTO>> listPaginated(
-            @RequestParam(defaultValue = "0") int pageNo,
-            @RequestParam(defaultValue = "10") int pageSize) {
-        PaginationResponse<BookingFormResponseDTO> paginationResponse = bookingServiceImpl.listPaginated(pageNo, pageSize);
-        return ResponseEntity.ok(paginationResponse);
+    @PostMapping("/{bookingId}/accept/{driverId}")
+    public BookingResponseDTO acceptBooking(@PathVariable Integer bookingId,
+                                            @PathVariable Integer driverId) {
+        return bookingService.acceptBooking(bookingId, driverId);
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<List<BookingFormResponseDTO>> search(@RequestParam String query) {
-        List<BookingFormResponseDTO> bookingFormResponseDTOList = bookingServiceImpl.searchBookingByRsql(query);
-        return ResponseEntity.ok(bookingFormResponseDTOList);
+    @PostMapping("/{bookingId}/complete")
+    public BookingResponseDTO completeBooking(@PathVariable Integer bookingId) {
+        return bookingService.completeBooking(bookingId);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<BookingFormResponseDTO> updateBooking(@PathVariable Integer id , @RequestBody UpdateBookingFormRequestDTO updateBookingFormRequestDTO) {
-        BookingFormResponseDTO bookingFormResponseDTO = bookingServiceImpl.updateBooking(id,updateBookingFormRequestDTO);
-        return ResponseEntity.status(HttpStatus.OK).body(bookingFormResponseDTO);
+    @GetMapping("/user/{userId}")
+    public List<BookingResponseDTO> getBookingsByUserId(@PathVariable Integer userId) {
+        return bookingService.getBookingsByUserId(userId);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteBooking(@PathVariable Integer id) {
-        bookingServiceImpl.deleteBookingById(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    @GetMapping("/driver/{driverId}")
+    public List<BookingResponseDTO> getBookingsByDriverId(@PathVariable Integer driverId) {
+        return bookingService.getBookingsByDriverId(driverId);
     }
+
+    @GetMapping("/{bookingId}")
+    public BookingResponseDTO getBookingById(@PathVariable Integer bookingId) {
+        return bookingService.getBookingById(bookingId);
+    }
+
+    @PutMapping("/{bookingId}/cancel")
+    public ResponseEntity<BookingResponseDTO> cancelBooking(
+            @PathVariable Integer bookingId,
+            @RequestParam("cancelledBy") BookingCancelledBy cancelledBy
+    ) {
+        BookingResponseDTO response = bookingService.cancelBooking(bookingId, cancelledBy);
+        return ResponseEntity.ok(response);
+    }
+
 }
