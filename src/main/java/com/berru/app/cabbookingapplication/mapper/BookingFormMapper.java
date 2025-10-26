@@ -1,19 +1,16 @@
 package com.berru.app.cabbookingapplication.mapper;
 
-import com.berru.app.cabbookingapplication.dto.BookingFormResponseDTO;
-import com.berru.app.cabbookingapplication.dto.NewBookingFormRequestDTO;
-import com.berru.app.cabbookingapplication.dto.UpdateBookingFormRequestDTO;
-import com.berru.app.cabbookingapplication.entity.BookingForm;
+import com.berru.app.cabbookingapplication.dto.BookingResponseDTO;
+import com.berru.app.cabbookingapplication.dto.NewBookingRequestDTO;
+import com.berru.app.cabbookingapplication.entity.Booking;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface BookingFormMapper {
 
-    BookingForm toBookingForm(NewBookingFormRequestDTO newBookingFormRequestDTO);
+    Booking toBookingForm(NewBookingRequestDTO newBookingRequestDTO);
 
-    BookingFormResponseDTO toBookingFormResponseDTO(BookingForm bookingForm);
-
-    void updateBookingFormFromDTO(UpdateBookingFormRequestDTO updateBookingFormRequestDTO, @MappingTarget BookingForm bookingForm);
+    BookingResponseDTO toBookingFormResponseDTO(Booking booking);
 
 }

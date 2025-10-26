@@ -35,7 +35,7 @@ public class Rating {
     @OneToOne
     @JoinColumn(name = "booking_id", nullable = false, unique = true)
     @JsonBackReference
-    private BookingForm booking;
+    private Booking booking;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "driver_id", nullable = false)
