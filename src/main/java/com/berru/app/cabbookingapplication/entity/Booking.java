@@ -1,6 +1,9 @@
 package com.berru.app.cabbookingapplication.entity;
 
+import com.berru.app.cabbookingapplication.enums.BookingStatus;
 import com.berru.app.cabbookingapplication.enums.VehicleType;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,22 +15,22 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @Entity
 @Table(name = "booking_form")
-public class BookingForm {
+public class Booking {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "first_name")
-    private String firstName;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonBackReference
+    private User user;
 
-    @Column(name = "last_name")
-    private String lastName;
-
-    @Column(name = "email")
-    private String email;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "driver_id")
+    @JsonBackReference
+    private Driver driver;
 
     @Column(name = "from_location")
     private String from;
@@ -45,6 +48,10 @@ public class BookingForm {
     @Enumerated(EnumType.STRING)
     private VehicleType vehicleType;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private BookingStatus status = BookingStatus.PENDING;
+
     @Column(name = "adult")
     private Integer adult;
 
@@ -53,4 +60,8 @@ public class BookingForm {
 
     @Column(name = "message")
     private String message;
+
+    @OneToOne(mappedBy = "booking", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private Rating rating;
 }
