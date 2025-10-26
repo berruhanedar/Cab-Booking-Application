@@ -1,7 +1,8 @@
 package com.berru.app.cabbookingapplication.service.impl;
 
 import com.berru.app.cabbookingapplication.dto.*;
-import com.berru.app.cabbookingapplication.entity.BookingForm;
+import com.berru.app.cabbookingapplication.entity.Booking;
+import com.berru.app.cabbookingapplication.enums.BookingCancelledBy;
 import com.berru.app.cabbookingapplication.exception.ResourceNotFoundException;
 import com.berru.app.cabbookingapplication.mapper.BookingFormMapper;
 import com.berru.app.cabbookingapplication.mapper.PaginationMapper;
@@ -20,7 +21,7 @@ import java.util.List;
 
 
 @Service
-public class BookingServiceImpl extends GenericRsqlService<BookingForm, BookingFormResponseDTO> implements BookingService {
+public class BookingServiceImpl extends GenericRsqlService<Booking, BookingResponseDTO> implements BookingService {
 
     private final BookingFormRepository bookingFormRepository;
     private final BookingFormMapper bookingFormMapper;
@@ -33,59 +34,44 @@ public class BookingServiceImpl extends GenericRsqlService<BookingForm, BookingF
         this.paginationMapper = paginationMapper;
     }
 
+
     @Override
-    @Transactional
-    public BookingFormResponseDTO createBooking(NewBookingFormRequestDTO newBookingFormRequestDTO) {
-        BookingForm bookingForm = bookingFormMapper.toBookingForm(newBookingFormRequestDTO);
-        bookingFormRepository.save(bookingForm);
-        return bookingFormMapper.toBookingFormResponseDTO(bookingForm);
+    public BookingResponseDTO createBooking(NewBookingRequestDTO newBookingRequestDTO) {
+        return null;
     }
 
     @Override
-    @Transactional
-    public BookingFormResponseDTO getAllBookings(Integer id) {
-        BookingForm bookingForm = bookingFormRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Contact Form not found with id " + id));
-        return bookingFormMapper.toBookingFormResponseDTO(bookingForm);
+    public List<BookingResponseDTO> getAvailableBookings() {
+        return List.of();
     }
 
     @Override
-    @Transactional
-    public PaginationResponse<BookingFormResponseDTO> listPaginated(int pageNo, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNo, pageSize);
-        Page<BookingForm> bookingFormPage = bookingFormRepository.findAll(pageable);
-
-        return paginationMapper.toPaginationResponse(bookingFormPage, bookingFormMapper::toBookingFormResponseDTO);
+    public BookingResponseDTO acceptBooking(Integer bookingId, Integer driverId) {
+        return null;
     }
 
     @Override
-    public List<BookingFormResponseDTO> searchBookingByRsql(String query) {
-        return searchByRsql(query);
+    public BookingResponseDTO completeBooking(Integer bookingId) {
+        return null;
     }
 
     @Override
-    @Transactional
-    public BookingFormResponseDTO updateBooking(Integer id, UpdateBookingFormRequestDTO updateBookingFormRequestDTO) {
-        BookingForm existingBookingForm = bookingFormRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Booking Form not found with id " + id));
-        bookingFormMapper.updateBookingFormFromDTO(updateBookingFormRequestDTO, existingBookingForm);
-        BookingForm bookingForm = bookingFormRepository.save(existingBookingForm);
-        return bookingFormMapper.toBookingFormResponseDTO(bookingForm);
+    public List<BookingResponseDTO> getBookingsByUserId(Integer userId) {
+        return List.of();
     }
 
     @Override
-    @Transactional
-    public void deleteBookingById(Integer id) {
-        BookingForm bookingForm = bookingFormRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Booking Form not found with id " + id));
-        bookingFormRepository.delete(bookingForm);
+    public List<BookingResponseDTO> getBookingsByDriverId(Integer driverId) {
+        return List.of();
     }
 
     @Override
-    public void completeBooking(Integer bookingId) {
-
+    public BookingResponseDTO getBookingById(Integer bookingId) {
+        return null;
     }
 
     @Override
-    public BookingFormResponseDTO completeBookingWithRating(Integer bookingId, Double ratingValue, Double tipAmount, String feedback) {
+    public BookingResponseDTO cancelBooking(Integer bookingId, BookingCancelledBy cancelledBy) {
         return null;
     }
 }
