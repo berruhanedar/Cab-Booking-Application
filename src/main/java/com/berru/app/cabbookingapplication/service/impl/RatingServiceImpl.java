@@ -3,26 +3,45 @@ package com.berru.app.cabbookingapplication.service.impl;
 import com.berru.app.cabbookingapplication.dto.NewRatingRequestDTO;
 import com.berru.app.cabbookingapplication.dto.RatingResponseDTO;
 import com.berru.app.cabbookingapplication.dto.UpdateRatingRequestDTO;
+import com.berru.app.cabbookingapplication.entity.Booking;
 import com.berru.app.cabbookingapplication.entity.Rating;
+import com.berru.app.cabbookingapplication.exception.ResourceNotFoundException;
 import com.berru.app.cabbookingapplication.mapper.RatingMapper;
+import com.berru.app.cabbookingapplication.repository.BookingRepository;
 import com.berru.app.cabbookingapplication.repository.RatingRepository;
 import com.berru.app.cabbookingapplication.service.RatingService;
 import com.berru.app.cabbookingapplication.service.base.GenericRsqlService;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Service
+@Transactional
 public class RatingServiceImpl extends GenericRsqlService<Rating, RatingResponseDTO> implements RatingService {
 
     private final RatingRepository ratingRepository;
+    private final RatingMapper ratingMapper;
+    private final BookingRepository bookingRepository;
 
-    public RatingServiceImpl(RatingRepository ratingRepository, RatingMapper ratingMapper) {
+    public RatingServiceImpl(RatingRepository ratingRepository, RatingMapper ratingMapper, BookingRepository bookingRepository) {
         super(ratingRepository, ratingMapper::toRatingResponseDTO);
         this.ratingRepository = ratingRepository;
+        this.ratingMapper = ratingMapper;
+        this.bookingRepository = bookingRepository;
     }
 
     @Override
     public RatingResponseDTO createRating(NewRatingRequestDTO newRatingRequestDTO) {
-        return null;
+        Booking booking = bookingRepository.findById(newRatingRequestDTO.getBookingId())
+                .orElseThrow(() -> new ResourceNotFoundException("Booking not found with ID: " + newRatingRequestDTO.getBookingId()));
+        ratingRepository.findByBooking(booking).ifPresent(existing -> {
+            throw new IllegalStateException("A rating already exists for this booking.");
+        });
+        Rating rating = ratingMapper.toRating(newRatingRequestDTO);
+        rating.setBooking(booking);
+        Rating savedRating = ratingRepository.save(rating);
+        return ratingMapper.toRatingResponseDTO(savedRating);
     }
 
     @Override
