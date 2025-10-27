@@ -12,9 +12,6 @@ public class NewRatingRequestDTO {
     @NotNull(message = "Booking ID cannot be null")
     private Integer bookingId;
 
-    @NotNull(message = "Driver ID cannot be null")
-    private Integer driverId;
-
     @NotNull(message = "Rating value cannot be null")
     @Min(value = 1, message = "Rating must be at least 1")
     @Max(value = 5, message = "Rating cannot exceed 5")

@@ -37,8 +37,4 @@ public class Rating {
     @JsonBackReference
     private Booking booking;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "driver_id", nullable = false)
-    @JsonBackReference
-    private Driver driver;
 }
