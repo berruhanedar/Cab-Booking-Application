@@ -3,17 +3,11 @@ package com.berru.app.cabbookingapplication.service.impl;
 import com.berru.app.cabbookingapplication.dto.*;
 import com.berru.app.cabbookingapplication.entity.Booking;
 import com.berru.app.cabbookingapplication.enums.BookingCancelledBy;
-import com.berru.app.cabbookingapplication.exception.ResourceNotFoundException;
 import com.berru.app.cabbookingapplication.mapper.BookingFormMapper;
 import com.berru.app.cabbookingapplication.mapper.PaginationMapper;
-import com.berru.app.cabbookingapplication.repository.BookingFormRepository;
+import com.berru.app.cabbookingapplication.repository.BookingRepository;
 import com.berru.app.cabbookingapplication.service.BookingService;
 import com.berru.app.cabbookingapplication.service.base.GenericRsqlService;
-import org.springframework.transaction.annotation.Transactional;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 
 import org.springframework.stereotype.Service;
 
@@ -23,13 +17,13 @@ import java.util.List;
 @Service
 public class BookingServiceImpl extends GenericRsqlService<Booking, BookingResponseDTO> implements BookingService {
 
-    private final BookingFormRepository bookingFormRepository;
+    private final BookingRepository bookingRepository;
     private final BookingFormMapper bookingFormMapper;
     private final PaginationMapper paginationMapper;
 
-    public BookingServiceImpl(BookingFormRepository bookingFormRepository, BookingFormMapper bookingFormMapper, PaginationMapper paginationMapper) {
-        super(bookingFormRepository, bookingFormMapper::toBookingFormResponseDTO);
-        this.bookingFormRepository = bookingFormRepository;
+    public BookingServiceImpl(BookingRepository bookingRepository, BookingFormMapper bookingFormMapper, PaginationMapper paginationMapper) {
+        super(bookingRepository, bookingFormMapper::toBookingFormResponseDTO);
+        this.bookingRepository = bookingRepository;
         this.bookingFormMapper = bookingFormMapper;
         this.paginationMapper = paginationMapper;
     }
