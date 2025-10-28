@@ -45,8 +45,11 @@ public class RatingServiceImpl extends GenericRsqlService<Rating, RatingResponse
     }
 
     @Override
-    public RatingResponseDTO updateRating(UpdateRatingRequestDTO updateRatingRequestDTO) {
-        return null;
+    public RatingResponseDTO updateRating(Integer ratingId, UpdateRatingRequestDTO updateRatingRequestDTO) {
+        Rating existingRating = ratingRepository.findById(ratingId).orElseThrow(() -> new ResourceNotFoundException("Rating not found with ID: " + ratingId));
+        ratingMapper.updateRatingFromDTO(updateRatingRequestDTO, existingRating);
+        Rating updatedRating = ratingRepository.save(existingRating);
+        return ratingMapper.toRatingResponseDTO(updatedRating);
     }
 
     @Override
