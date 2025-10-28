@@ -8,18 +8,9 @@ import java.util.List;
 
 public interface RatingService {
 
-    /**
-     * 1
-     * Yeni bir rating oluşturur.
-     * Tip (bahşiş) varsa PaymentService üzerinden ödemeyi gerçekleştirir.
-     */
     RatingResponseDTO createRating(NewRatingRequestDTO newRatingRequestDTO);
 
-    /**
-     * 2
-     * Mevcut bir rating'i günceller.
-     */
-    RatingResponseDTO updateRating(UpdateRatingRequestDTO updateRatingRequestDTO);
+    RatingResponseDTO updateRating(Integer ratingId, UpdateRatingRequestDTO updateRatingRequestDTO);
 
     /**
      * 3
