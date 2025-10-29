@@ -2,6 +2,7 @@ package com.berru.app.cabbookingapplication.service.impl;
 
 import com.berru.app.cabbookingapplication.dto.*;
 import com.berru.app.cabbookingapplication.entity.Driver;
+import com.berru.app.cabbookingapplication.entity.Rating;
 import com.berru.app.cabbookingapplication.entity.User;
 import com.berru.app.cabbookingapplication.entity.Vehicle;
 import com.berru.app.cabbookingapplication.enums.DriverAvailability;
@@ -14,6 +15,7 @@ import com.berru.app.cabbookingapplication.mapper.LocationMapper;
 import com.berru.app.cabbookingapplication.mapper.PaginationMapper;
 import com.berru.app.cabbookingapplication.mapper.VehicleMapper;
 import com.berru.app.cabbookingapplication.repository.DriverRepository;
+import com.berru.app.cabbookingapplication.repository.RatingRepository;
 import com.berru.app.cabbookingapplication.repository.UserRepository;
 import com.berru.app.cabbookingapplication.repository.VehicleRepository;
 import com.berru.app.cabbookingapplication.service.DriverService;
@@ -37,8 +39,9 @@ public class DriverServiceImpl extends GenericRsqlService<Driver, DriverResponse
     private final VehicleRepository vehicleRepository;
     private final VehicleMapper vehicleMapper;
     private final LocationMapper locationMapper;
+    private final RatingRepository ratingRepository;
 
-    public DriverServiceImpl(DriverRepository driverRepository, DriverMapper driverMapper, UserRepository userRepository, PaginationMapper paginationMapper, VehicleRepository vehicleRepository, VehicleMapper vehicleMapper, LocationMapper locationMapper) {
+    public DriverServiceImpl(DriverRepository driverRepository, DriverMapper driverMapper, UserRepository userRepository, PaginationMapper paginationMapper, VehicleRepository vehicleRepository, VehicleMapper vehicleMapper, LocationMapper locationMapper, RatingRepository ratingRepository) {
         super(driverRepository, driverMapper::toDriverResponseDTO);
         this.driverRepository = driverRepository;
         this.driverMapper = driverMapper;
@@ -47,31 +50,26 @@ public class DriverServiceImpl extends GenericRsqlService<Driver, DriverResponse
         this.vehicleRepository = vehicleRepository;
         this.vehicleMapper = vehicleMapper;
         this.locationMapper = locationMapper;
+        this.ratingRepository = ratingRepository;
     }
 
     @Override
     public DriverResponseDTO createDriver(NewDriverRequestDTO newDriverRequestDTO) {
         User user = userRepository.findById(newDriverRequestDTO.getUserId())
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + newDriverRequestDTO.getUserId()));
-
         if (user.getRole() != RoleStatus.DRIVER) {
             throw new ResourceNotFoundException("User role must be DRIVER to create a driver profile.");
         }
-
         if (driverRepository.existsByUserId(user.getId())) {
             throw new DuplicateDriverProfileException("This user already has a driver profile.");
         }
-
         Driver driver = driverMapper.toDriver(newDriverRequestDTO);
         driver.setUser(user);
-
         Vehicle vehicle = vehicleRepository.findById(newDriverRequestDTO.getVehicleId())
                 .orElseThrow(() -> new ResourceNotFoundException("Vehicle not found with ID: " + newDriverRequestDTO.getVehicleId()));
         vehicle.setDriver(driver);
         driver.getVehicles().add(vehicle);
-
         vehicleRepository.save(vehicle);
-
         Driver savedDriver = driverRepository.save(driver);
         return driverMapper.toDriverResponseDTO(savedDriver);
     }
@@ -189,5 +187,16 @@ public class DriverServiceImpl extends GenericRsqlService<Driver, DriverResponse
     public void deleteDriverById(Integer id) {
         Driver driver = driverRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Driver not found with ID: " + id));
         driverRepository.delete(driver);
+    }
+
+    @Override
+    public Double getAverageRatingByDriverId(Integer driverId) {
+        Driver driver = driverRepository.findById(driverId)
+                .orElseThrow(() -> new ResourceNotFoundException("Driver not found with ID: " + driverId));
+        List<Rating> ratings = ratingRepository.findByDriver(driver);
+        Double average = ratingRepository.findAverageScoreByDriverId(driverId);
+        driver.setAverageRating(average);
+        driverRepository.save(driver);
+        return average;
     }
 }

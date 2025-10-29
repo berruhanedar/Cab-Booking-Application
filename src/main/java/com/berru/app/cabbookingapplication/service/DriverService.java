@@ -37,4 +37,6 @@ public interface DriverService {
 
     void deleteDriverById(Integer id);
 
+    Double getAverageRatingByDriverId(Integer driverId);
+
 }
