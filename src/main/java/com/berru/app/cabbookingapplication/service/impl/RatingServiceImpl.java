@@ -4,10 +4,12 @@ import com.berru.app.cabbookingapplication.dto.NewRatingRequestDTO;
 import com.berru.app.cabbookingapplication.dto.RatingResponseDTO;
 import com.berru.app.cabbookingapplication.dto.UpdateRatingRequestDTO;
 import com.berru.app.cabbookingapplication.entity.Booking;
+import com.berru.app.cabbookingapplication.entity.Driver;
 import com.berru.app.cabbookingapplication.entity.Rating;
 import com.berru.app.cabbookingapplication.exception.ResourceNotFoundException;
 import com.berru.app.cabbookingapplication.mapper.RatingMapper;
 import com.berru.app.cabbookingapplication.repository.BookingRepository;
+import com.berru.app.cabbookingapplication.repository.DriverRepository;
 import com.berru.app.cabbookingapplication.repository.RatingRepository;
 import com.berru.app.cabbookingapplication.service.RatingService;
 import com.berru.app.cabbookingapplication.service.base.GenericRsqlService;
@@ -23,12 +25,14 @@ public class RatingServiceImpl extends GenericRsqlService<Rating, RatingResponse
     private final RatingRepository ratingRepository;
     private final RatingMapper ratingMapper;
     private final BookingRepository bookingRepository;
+    private final DriverRepository driverRepository;
 
-    public RatingServiceImpl(RatingRepository ratingRepository, RatingMapper ratingMapper, BookingRepository bookingRepository) {
+    public RatingServiceImpl(RatingRepository ratingRepository, RatingMapper ratingMapper, BookingRepository bookingRepository,DriverRepository driverRepository) {
         super(ratingRepository, ratingMapper::toRatingResponseDTO);
         this.ratingRepository = ratingRepository;
         this.ratingMapper = ratingMapper;
         this.bookingRepository = bookingRepository;
+        this.driverRepository = driverRepository;
     }
 
     @Override
@@ -53,13 +57,20 @@ public class RatingServiceImpl extends GenericRsqlService<Rating, RatingResponse
     }
 
     @Override
+    @Transactional(readOnly = true)
     public RatingResponseDTO getRatingById(Integer ratingId) {
-        return null;
+        Rating rating = ratingRepository.findById(ratingId).orElseThrow(() -> new ResourceNotFoundException("Rating not found with ID: " + ratingId));
+        return ratingMapper.toRatingResponseDTO(rating);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<RatingResponseDTO> getRatingsByDriverId(Integer driverId) {
-        return List.of();
+        Driver driver = driverRepository.findById(driverId).orElseThrow(() -> new ResourceNotFoundException("Driver not found with ID: " + driverId));
+        List<Rating> ratings = ratingRepository.findByDriver(driver);
+        return ratings.stream()
+                .map(ratingMapper::toRatingResponseDTO)
+                .toList();
     }
 
     @Override
