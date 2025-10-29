@@ -44,4 +44,10 @@ public class RatingController {
         List<RatingResponseDTO> responses = ratingService.getRatingsByDriverId(driverId);
         return ResponseEntity.ok(responses);
     }
+
+    @GetMapping("/booking/{bookingId}")
+    public ResponseEntity<RatingResponseDTO> getRatingByBookingId(@PathVariable Integer bookingId) {
+        RatingResponseDTO ratingResponseDTO = ratingService.getRatingByBookingId(bookingId);
+        return ResponseEntity.ok(ratingResponseDTO);
+    }
 }
