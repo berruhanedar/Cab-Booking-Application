@@ -138,9 +138,9 @@ public class DriverController {
         return ResponseEntity.ok(response);
     }
 
-
-
-
-
-
+    @GetMapping("/{driverId}/average-rating")
+    public ResponseEntity<Double> getAverageRatingByDriverId(@PathVariable Integer driverId) {
+        Double averageRating = driverService.getAverageRatingByDriverId(driverId);
+        return ResponseEntity.ok(averageRating);
+    }
 }
