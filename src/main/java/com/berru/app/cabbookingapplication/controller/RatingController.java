@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/rating")
 public class RatingController {
@@ -31,5 +33,15 @@ public class RatingController {
         return ResponseEntity.ok(ratingResponseDTO);
     }
 
+    @GetMapping("/{ratingId}")
+    public ResponseEntity<RatingResponseDTO> getRatingById(@PathVariable Integer ratingId) {
+        RatingResponseDTO ratingResponseDTO = ratingService.getRatingById(ratingId);
+        return ResponseEntity.ok(ratingResponseDTO);
+    }
 
+    @GetMapping("/driver/{driverId}")
+    public ResponseEntity<List<RatingResponseDTO>> getRatingsByDriverId(@PathVariable Integer driverId) {
+        List<RatingResponseDTO> responses = ratingService.getRatingsByDriverId(driverId);
+        return ResponseEntity.ok(responses);
+    }
 }
