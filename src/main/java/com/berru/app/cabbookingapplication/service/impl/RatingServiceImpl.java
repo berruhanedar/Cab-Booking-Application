@@ -74,7 +74,11 @@ public class RatingServiceImpl extends GenericRsqlService<Rating, RatingResponse
     }
 
     @Override
+    @Transactional(readOnly = true)
     public RatingResponseDTO getRatingByBookingId(Integer bookingId) {
-        return null;
+        Booking booking = bookingRepository.findById(bookingId).orElseThrow(()-> new ResourceNotFoundException("Booking not found with ID: " + bookingId));
+        Rating rating = ratingRepository.findByBooking(booking)
+                .orElseThrow(() -> new ResourceNotFoundException("Rating not found for booking with ID: " + bookingId));
+        return ratingMapper.toRatingResponseDTO(rating);
     }
 }
