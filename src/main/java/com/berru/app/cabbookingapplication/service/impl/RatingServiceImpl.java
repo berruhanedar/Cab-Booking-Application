@@ -6,6 +6,7 @@ import com.berru.app.cabbookingapplication.dto.UpdateRatingRequestDTO;
 import com.berru.app.cabbookingapplication.entity.Booking;
 import com.berru.app.cabbookingapplication.entity.Driver;
 import com.berru.app.cabbookingapplication.entity.Rating;
+import com.berru.app.cabbookingapplication.exception.DuplicateRatingException;
 import com.berru.app.cabbookingapplication.exception.ResourceNotFoundException;
 import com.berru.app.cabbookingapplication.mapper.RatingMapper;
 import com.berru.app.cabbookingapplication.repository.BookingRepository;
@@ -40,7 +41,7 @@ public class RatingServiceImpl extends GenericRsqlService<Rating, RatingResponse
         Booking booking = bookingRepository.findById(newRatingRequestDTO.getBookingId())
                 .orElseThrow(() -> new ResourceNotFoundException("Booking not found with ID: " + newRatingRequestDTO.getBookingId()));
         ratingRepository.findByBooking(booking).ifPresent(existing -> {
-            throw new IllegalStateException("A rating already exists for this booking.");
+            throw new DuplicateRatingException("A rating already exists for this booking.");
         });
         Rating rating = ratingMapper.toRating(newRatingRequestDTO);
         rating.setBooking(booking);
