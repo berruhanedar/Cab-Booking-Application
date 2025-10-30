@@ -21,4 +21,7 @@ public class NewRatingRequestDTO {
     private String feedback;
 
     private Double tipAmount = 0.0;
+
+    @NotNull(message = "Driver ID cannot be null")
+    private Integer driverId;
 }

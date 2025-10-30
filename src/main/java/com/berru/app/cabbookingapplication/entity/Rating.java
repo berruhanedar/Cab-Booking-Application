@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Table(name = "ratings")
@@ -36,5 +37,11 @@ public class Rating {
     @JoinColumn(name = "booking_id", nullable = false, unique = true)
     @JsonBackReference
     private Booking booking;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "driver_id", nullable = false)
+    @JsonBackReference
+    @ToString.Exclude
+    private Driver driver;
 
 }
