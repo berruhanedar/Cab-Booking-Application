@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/rating")
+@RequestMapping("/api/ratings")
 public class RatingController {
 
     private final RatingService ratingService;
@@ -27,7 +27,7 @@ public class RatingController {
         return ResponseEntity.status(HttpStatus.CREATED).body(ratingResponseDTO);
     }
 
-    @PutMapping("/update/{ratingId}")
+    @PutMapping("/{ratingId}")
     public ResponseEntity<RatingResponseDTO> updateRating(@PathVariable Integer ratingId, @RequestBody @Valid UpdateRatingRequestDTO updateRatingRequestDTO) {
         RatingResponseDTO ratingResponseDTO = ratingService.updateRating(ratingId, updateRatingRequestDTO);
         return ResponseEntity.ok(ratingResponseDTO);
