@@ -8,20 +8,8 @@ import java.util.List;
 
 public interface BookingService {
 
-    /**
-     * 1️⃣ Kullanıcı yeni bir booking oluşturur.
-     * Status = PENDING olur.
-     *
-     * @param newBookingRequestDTO Booking oluşturmak için gerekli bilgiler.
-     * @return Oluşturulan booking bilgilerini içeren DTO.
-     */
     BookingResponseDTO createBooking(NewBookingRequestDTO newBookingRequestDTO);
 
-    /**
-     * 2️⃣ Driver, henüz sürücü atanmamış (PENDING) booking’leri listeler.
-     *
-     * @return PENDING statüsündeki tüm bookingleri içeren DTO listesi.
-     */
     List<BookingResponseDTO> getAvailableBookings();
 
     /**
