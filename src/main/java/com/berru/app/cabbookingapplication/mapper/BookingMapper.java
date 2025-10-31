@@ -4,13 +4,12 @@ import com.berru.app.cabbookingapplication.dto.BookingResponseDTO;
 import com.berru.app.cabbookingapplication.dto.NewBookingRequestDTO;
 import com.berru.app.cabbookingapplication.entity.Booking;
 import org.mapstruct.Mapper;
-import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
-public interface BookingFormMapper {
+public interface BookingMapper {
 
-    Booking toBookingForm(NewBookingRequestDTO newBookingRequestDTO);
+    Booking toBooking(NewBookingRequestDTO newBookingRequestDTO);
 
-    BookingResponseDTO toBookingFormResponseDTO(Booking booking);
+    BookingResponseDTO toBookingResponseDTO(Booking booking);
 
 }
