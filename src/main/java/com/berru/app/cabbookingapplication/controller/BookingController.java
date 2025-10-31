@@ -4,6 +4,8 @@ import com.berru.app.cabbookingapplication.dto.BookingResponseDTO;
 import com.berru.app.cabbookingapplication.dto.NewBookingRequestDTO;
 import com.berru.app.cabbookingapplication.enums.BookingCancelledBy;
 import com.berru.app.cabbookingapplication.service.BookingService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,8 +22,9 @@ public class BookingController {
     }
 
     @PostMapping
-    public BookingResponseDTO createBooking(@RequestBody NewBookingRequestDTO newBookingRequestDTO) {
-        return bookingService.createBooking(newBookingRequestDTO);
+    public ResponseEntity<BookingResponseDTO> createBooking(@RequestBody @Valid NewBookingRequestDTO newBookingRequestDTO) {
+        BookingResponseDTO bookingResponseDTO = bookingService.createBooking(newBookingRequestDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(bookingResponseDTO);
     }
 
     @GetMapping("/available")
