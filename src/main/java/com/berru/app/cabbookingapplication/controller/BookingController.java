@@ -27,15 +27,11 @@ public class BookingController {
         return ResponseEntity.status(HttpStatus.CREATED).body(bookingResponseDTO);
     }
 
-    @GetMapping("/available")
-    public List<BookingResponseDTO> getAvailableBookings() {
-        return bookingService.getAvailableBookings();
-    }
-
-    @PostMapping("/{bookingId}/accept/{driverId}")
-    public BookingResponseDTO acceptBooking(@PathVariable Integer bookingId,
-                                            @PathVariable Integer driverId) {
-        return bookingService.acceptBooking(bookingId, driverId);
+    @PutMapping("/{bookingId}/accept/{driverId}")
+    public ResponseEntity<BookingResponseDTO> acceptBooking(@PathVariable Integer bookingId,
+                                                            @PathVariable Integer driverId) {
+        BookingResponseDTO bookingResponseDTO = bookingService.acceptBooking(bookingId, driverId);
+        return ResponseEntity.ok(bookingResponseDTO);
     }
 
     @PostMapping("/{bookingId}/complete")
