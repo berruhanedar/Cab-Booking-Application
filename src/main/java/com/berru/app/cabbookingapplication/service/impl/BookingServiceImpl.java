@@ -6,6 +6,7 @@ import com.berru.app.cabbookingapplication.entity.Driver;
 import com.berru.app.cabbookingapplication.entity.User;
 import com.berru.app.cabbookingapplication.enums.BookingCancelledBy;
 import com.berru.app.cabbookingapplication.enums.BookingStatus;
+import com.berru.app.cabbookingapplication.exception.BookingAlreadyConfirmedException;
 import com.berru.app.cabbookingapplication.exception.ResourceNotFoundException;
 import com.berru.app.cabbookingapplication.mapper.BookingMapper;
 import com.berru.app.cabbookingapplication.mapper.PaginationMapper;
@@ -58,16 +59,24 @@ public class BookingServiceImpl extends GenericRsqlService<Booking, BookingRespo
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<BookingResponseDTO> getAvailableBookings() {
         List<Booking> bookings = bookingRepository.findByStatus(BookingStatus.PENDING);
         return bookings.stream().map(bookingMapper::toBookingResponseDTO)
                 .toList();
-
     }
 
     @Override
     public BookingResponseDTO acceptBooking(Integer bookingId, Integer driverId) {
-        return null;
+        Driver driver = driverRepository.findById(driverId).orElseThrow(() -> new ResourceNotFoundException("Driver not found with id " + driverId));
+        Booking booking = bookingRepository.findById(bookingId).orElseThrow(() -> new ResourceNotFoundException("Booking not found with id " + bookingId));
+        if (booking.getDriver() != null) {
+            throw new BookingAlreadyConfirmedException("Booking already assigned to a driver.");
+        }
+        booking.setStatus(BookingStatus.CONFIRMED);
+        booking.setDriver(driver);
+        Booking updatedBooking = bookingRepository.save(booking);
+        return bookingMapper.toBookingResponseDTO(updatedBooking);
     }
 
     @Override

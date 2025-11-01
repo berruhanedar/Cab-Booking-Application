@@ -12,14 +12,6 @@ public interface BookingService {
 
     List<BookingResponseDTO> getAvailableBookings();
 
-    /**
-     * 3️⃣ Driver belirli bir booking’i kabul eder.
-     * Booking’e driver atanır ve status CONFIRMED olur.
-     *
-     * @param bookingId Kabul edilecek booking ID.
-     * @param driverId Booking’i kabul eden driver ID.
-     * @return Güncellenmiş booking bilgilerini içeren DTO.
-     */
     BookingResponseDTO acceptBooking(Integer bookingId, Integer driverId);
 
     /**
