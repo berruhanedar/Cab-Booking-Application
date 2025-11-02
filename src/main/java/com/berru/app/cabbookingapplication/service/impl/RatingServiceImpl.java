@@ -28,7 +28,7 @@ public class RatingServiceImpl extends GenericRsqlService<Rating, RatingResponse
     private final BookingRepository bookingRepository;
     private final DriverRepository driverRepository;
 
-    public RatingServiceImpl(RatingRepository ratingRepository, RatingMapper ratingMapper, BookingRepository bookingRepository,DriverRepository driverRepository) {
+    public RatingServiceImpl(RatingRepository ratingRepository, RatingMapper ratingMapper, BookingRepository bookingRepository, DriverRepository driverRepository) {
         super(ratingRepository, ratingMapper::toRatingResponseDTO);
         this.ratingRepository = ratingRepository;
         this.ratingMapper = ratingMapper;
@@ -45,7 +45,9 @@ public class RatingServiceImpl extends GenericRsqlService<Rating, RatingResponse
         });
         Rating rating = ratingMapper.toRating(newRatingRequestDTO);
         rating.setBooking(booking);
+        rating.setDriver(booking.getDriver());
         Rating savedRating = ratingRepository.save(rating);
+        updateDriverAverageRating(booking.getDriver());
         return ratingMapper.toRatingResponseDTO(savedRating);
     }
 
@@ -77,9 +79,17 @@ public class RatingServiceImpl extends GenericRsqlService<Rating, RatingResponse
     @Override
     @Transactional(readOnly = true)
     public RatingResponseDTO getRatingByBookingId(Integer bookingId) {
-        Booking booking = bookingRepository.findById(bookingId).orElseThrow(()-> new ResourceNotFoundException("Booking not found with ID: " + bookingId));
+        Booking booking = bookingRepository.findById(bookingId).orElseThrow(() -> new ResourceNotFoundException("Booking not found with ID: " + bookingId));
         Rating rating = ratingRepository.findByBooking(booking)
                 .orElseThrow(() -> new ResourceNotFoundException("Rating not found for booking with ID: " + bookingId));
         return ratingMapper.toRatingResponseDTO(rating);
+    }
+
+    private void updateDriverAverageRating(Driver driver) {
+        Double averageRating = ratingRepository.findAverageRatingByDriverId(driver.getId());
+        Long totalRatings = ratingRepository.countRatingsByDriverId(driver.getId());
+        driver.setAverageRating(averageRating);
+        driver.setTotalRides(totalRatings.intValue());
+        driverRepository.save(driver);
     }
 }
