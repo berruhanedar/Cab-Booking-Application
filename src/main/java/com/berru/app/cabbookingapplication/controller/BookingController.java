@@ -34,10 +34,12 @@ public class BookingController {
         return ResponseEntity.ok(bookingResponseDTO);
     }
 
-    @PostMapping("/{bookingId}/complete")
-    public BookingResponseDTO completeBooking(@PathVariable Integer bookingId) {
-        return bookingService.completeBooking(bookingId);
+    @PutMapping("/{bookingId}/complete")
+    public ResponseEntity<BookingResponseDTO> completeBooking(@PathVariable Integer bookingId) {
+        BookingResponseDTO bookingResponseDTO = bookingService.completeBooking(bookingId);
+        return ResponseEntity.ok(bookingResponseDTO);
     }
+
 
     @GetMapping("/user/{userId}")
     public List<BookingResponseDTO> getBookingsByUserId(@PathVariable Integer userId) {
