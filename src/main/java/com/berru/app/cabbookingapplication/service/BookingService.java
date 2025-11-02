@@ -14,13 +14,6 @@ public interface BookingService {
 
     BookingResponseDTO acceptBooking(Integer bookingId, Integer driverId);
 
-    /**
-     * 4️⃣ Booking tamamlandığında çağrılır.
-     * Status COMPLETED olur, driver'ın totalRides alanı güncellenir.
-     *
-     * @param bookingId Tamamlanacak booking ID.
-     * @return Güncellenmiş booking bilgilerini içeren DTO.
-     */
     BookingResponseDTO completeBooking(Integer bookingId);
 
     /**

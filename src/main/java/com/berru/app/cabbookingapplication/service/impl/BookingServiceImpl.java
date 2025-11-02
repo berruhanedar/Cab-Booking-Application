@@ -7,6 +7,7 @@ import com.berru.app.cabbookingapplication.entity.User;
 import com.berru.app.cabbookingapplication.enums.BookingCancelledBy;
 import com.berru.app.cabbookingapplication.enums.BookingStatus;
 import com.berru.app.cabbookingapplication.exception.BookingAlreadyConfirmedException;
+import com.berru.app.cabbookingapplication.exception.InvalidBookingStateException;
 import com.berru.app.cabbookingapplication.exception.ResourceNotFoundException;
 import com.berru.app.cabbookingapplication.mapper.BookingMapper;
 import com.berru.app.cabbookingapplication.mapper.PaginationMapper;
@@ -14,6 +15,7 @@ import com.berru.app.cabbookingapplication.repository.BookingRepository;
 import com.berru.app.cabbookingapplication.repository.DriverRepository;
 import com.berru.app.cabbookingapplication.repository.UserRepository;
 import com.berru.app.cabbookingapplication.service.BookingService;
+import com.berru.app.cabbookingapplication.service.RatingService;
 import com.berru.app.cabbookingapplication.service.base.GenericRsqlService;
 
 import org.springframework.stereotype.Service;
@@ -33,14 +35,16 @@ public class BookingServiceImpl extends GenericRsqlService<Booking, BookingRespo
     private final PaginationMapper paginationMapper;
     private final DriverRepository driverRepository;
     private final UserRepository userRepository;
+    private final RatingService ratingService;
 
-    public BookingServiceImpl(BookingRepository bookingRepository, BookingMapper bookingMapper, PaginationMapper paginationMapper, DriverRepository driverRepository, UserRepository userRepository) {
+    public BookingServiceImpl(BookingRepository bookingRepository, BookingMapper bookingMapper, PaginationMapper paginationMapper, DriverRepository driverRepository, UserRepository userRepository,RatingService ratingService) {
         super(bookingRepository, bookingMapper::toBookingResponseDTO);
         this.bookingRepository = bookingRepository;
         this.bookingMapper = bookingMapper;
         this.paginationMapper = paginationMapper;
         this.driverRepository = driverRepository;
         this.userRepository = userRepository;
+        this.ratingService = ratingService;
     }
 
     @Override
@@ -81,7 +85,22 @@ public class BookingServiceImpl extends GenericRsqlService<Booking, BookingRespo
 
     @Override
     public BookingResponseDTO completeBooking(Integer bookingId) {
-        return null;
+        Booking booking = bookingRepository.findById(bookingId).orElseThrow(() -> new ResourceNotFoundException("Booking not found with id " + bookingId));
+        if (booking.getStatus() != BookingStatus.CONFIRMED) {
+            throw new InvalidBookingStateException("Only confirmed bookings can be completed.");
+        }
+        booking.setStatus(BookingStatus.COMPLETED);
+        Booking updatedBooking = bookingRepository.save(booking);
+
+        NewRatingRequestDTO newRating = NewRatingRequestDTO.builder()
+                .bookingId(booking.getId())
+                .ratingValue(5.0)
+                .feedback("Auto-generated rating for completed ride")
+                .tipAmount(0.0)
+                .build();
+        ratingService.createRating(newRating);
+
+        return bookingMapper.toBookingResponseDTO(updatedBooking);
     }
 
     @Override
