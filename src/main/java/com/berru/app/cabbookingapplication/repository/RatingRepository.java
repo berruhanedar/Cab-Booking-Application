@@ -17,7 +17,10 @@ public interface RatingRepository extends JpaRepository<Rating, Integer> , JpaSp
 
     List<Rating> findByDriver(Driver driver);
 
-    @Query("SELECT COALESCE(AVG(r.score), 0) FROM Rating r WHERE r.driver.id = :driverId")
-    Double findAverageScoreByDriverId(@Param("driverId") Integer driverId);
+    @Query("SELECT COALESCE(AVG(r.ratingValue), 0) FROM Rating r WHERE r.driver.id = :driverId")
+    Double findAverageRatingByDriverId(@Param("driverId") Integer driver);
+
+    @Query("SELECT COUNT(r) FROM Rating r WHERE r.driver.id = :driverId")
+    Long countRatingsByDriverId(@Param("driverId") Integer driverId);
 
 }
