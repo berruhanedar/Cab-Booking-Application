@@ -18,20 +18,8 @@ public interface BookingService {
 
     List<BookingResponseDTO> getBookingsByUserId(Integer userId);
 
-    /**
-     * 6️⃣ Belirli bir sürücüye ait tüm booking’leri döndürür.
-     *
-     * @param driverId Driver ID.
-     * @return Sürücünün tüm bookinglerini içeren DTO listesi.
-     */
     List<BookingResponseDTO> getBookingsByDriverId(Integer driverId);
 
-    /**
-     * 7️⃣ Tek bir booking'i ID'ye göre getirir.
-     *
-     * @param bookingId Booking ID.
-     * @return Booking bilgilerini içeren DTO.
-     */
     BookingResponseDTO getBookingById(Integer bookingId);
 
     /**

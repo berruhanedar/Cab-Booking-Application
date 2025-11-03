@@ -113,13 +113,19 @@ public class BookingServiceImpl extends GenericRsqlService<Booking, BookingRespo
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<BookingResponseDTO> getBookingsByDriverId(Integer driverId) {
-        return List.of();
+        Driver driver = driverRepository.findById(driverId).orElseThrow(() -> new ResourceNotFoundException("Driver not found with id " + driverId));
+        List<Booking> bookings = bookingRepository.findByDriverId(driverId);
+        return bookings.stream().map(bookingMapper::toBookingResponseDTO)
+                .toList();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public BookingResponseDTO getBookingById(Integer bookingId) {
-        return null;
+        Booking booking = bookingRepository.findById(bookingId).orElseThrow(() -> new ResourceNotFoundException("Booking not found with id " + bookingId));
+        return bookingMapper.toBookingResponseDTO(booking);
     }
 
     @Override
