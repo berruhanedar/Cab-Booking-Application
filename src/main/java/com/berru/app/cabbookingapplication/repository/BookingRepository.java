@@ -11,11 +11,14 @@ import java.time.LocalTime;
 import java.util.List;
 
 public interface BookingRepository extends JpaRepository<Booking, Integer>, JpaSpecificationExecutor<Booking> {
+
     boolean existsByDriverAndDateAndTimeAndStatusNot(
             Driver driver, LocalDate date, LocalTime time, BookingStatus status);
 
     List<Booking> findByStatus(BookingStatus status);
 
     List<Booking> findByUserId(Integer  userId);
+
+    List<Booking> findByDriverId(Integer  driverId);
 
 }
