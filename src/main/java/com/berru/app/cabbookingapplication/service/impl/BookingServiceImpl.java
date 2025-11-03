@@ -104,8 +104,12 @@ public class BookingServiceImpl extends GenericRsqlService<Booking, BookingRespo
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<BookingResponseDTO> getBookingsByUserId(Integer userId) {
-        return List.of();
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found with id " + userId));
+        List<Booking> bookings = bookingRepository.findByUserId(userId);
+        return bookings.stream().map(bookingMapper::toBookingResponseDTO)
+                .toList();
     }
 
     @Override

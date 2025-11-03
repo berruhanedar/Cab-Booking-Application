@@ -16,12 +16,6 @@ public interface BookingService {
 
     BookingResponseDTO completeBooking(Integer bookingId);
 
-    /**
-     * 5️⃣ Belirli bir kullanıcıya ait tüm booking’leri döndürür.
-     *
-     * @param userId Kullanıcı ID.
-     * @return Kullanıcının tüm bookinglerini içeren DTO listesi.
-     */
     List<BookingResponseDTO> getBookingsByUserId(Integer userId);
 
     /**
