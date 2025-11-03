@@ -40,10 +40,10 @@ public class BookingController {
         return ResponseEntity.ok(bookingResponseDTO);
     }
 
-
     @GetMapping("/user/{userId}")
-    public List<BookingResponseDTO> getBookingsByUserId(@PathVariable Integer userId) {
-        return bookingService.getBookingsByUserId(userId);
+    public ResponseEntity<List<BookingResponseDTO>> getBookingsByUserId(@PathVariable Integer userId) {
+        List<BookingResponseDTO> bookingResponseDTOs = bookingService.getBookingsByUserId(userId);
+        return ResponseEntity.ok(bookingResponseDTOs);
     }
 
     @GetMapping("/driver/{driverId}")
