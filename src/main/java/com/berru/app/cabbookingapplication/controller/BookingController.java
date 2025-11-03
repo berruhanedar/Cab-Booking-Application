@@ -47,13 +47,15 @@ public class BookingController {
     }
 
     @GetMapping("/driver/{driverId}")
-    public List<BookingResponseDTO> getBookingsByDriverId(@PathVariable Integer driverId) {
-        return bookingService.getBookingsByDriverId(driverId);
+    public  ResponseEntity<List<BookingResponseDTO>> getBookingsByDriverId(@PathVariable Integer driverId) {
+        List<BookingResponseDTO> bookingResponseDTOs = bookingService.getBookingsByDriverId(driverId);
+        return ResponseEntity.ok(bookingResponseDTOs);
     }
 
     @GetMapping("/{bookingId}")
-    public BookingResponseDTO getBookingById(@PathVariable Integer bookingId) {
-        return bookingService.getBookingById(bookingId);
+    public ResponseEntity<BookingResponseDTO> getBookingById(@PathVariable Integer bookingId) {
+       BookingResponseDTO bookingResponseDTO = bookingService.getBookingById(bookingId);
+       return ResponseEntity.ok(bookingResponseDTO);
     }
 
     @PutMapping("/{bookingId}/cancel")
