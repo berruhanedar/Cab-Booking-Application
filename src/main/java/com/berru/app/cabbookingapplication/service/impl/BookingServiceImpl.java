@@ -4,11 +4,10 @@ import com.berru.app.cabbookingapplication.dto.*;
 import com.berru.app.cabbookingapplication.entity.Booking;
 import com.berru.app.cabbookingapplication.entity.Driver;
 import com.berru.app.cabbookingapplication.entity.User;
-import com.berru.app.cabbookingapplication.enums.BookingCancelledBy;
 import com.berru.app.cabbookingapplication.enums.BookingStatus;
-import com.berru.app.cabbookingapplication.exception.BookingAlreadyConfirmedException;
-import com.berru.app.cabbookingapplication.exception.InvalidBookingStateException;
-import com.berru.app.cabbookingapplication.exception.ResourceNotFoundException;
+import com.berru.app.cabbookingapplication.enums.CancelledBy;
+import com.berru.app.cabbookingapplication.enums.RoleStatus;
+import com.berru.app.cabbookingapplication.exception.*;
 import com.berru.app.cabbookingapplication.mapper.BookingMapper;
 import com.berru.app.cabbookingapplication.mapper.PaginationMapper;
 import com.berru.app.cabbookingapplication.repository.BookingRepository;
@@ -22,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -36,6 +36,10 @@ public class BookingServiceImpl extends GenericRsqlService<Booking, BookingRespo
     private final DriverRepository driverRepository;
     private final UserRepository userRepository;
     private final RatingService ratingService;
+
+    private static final String BOOKING_NOT_FOUND = "Booking not found with id ";
+    private static final String USER_NOT_FOUND = "User not found with id ";
+    private static final String DRIVER_NOT_FOUND = "Driver not found with id ";
 
     public BookingServiceImpl(BookingRepository bookingRepository, BookingMapper bookingMapper, PaginationMapper paginationMapper, DriverRepository driverRepository, UserRepository userRepository,RatingService ratingService) {
         super(bookingRepository, bookingMapper::toBookingResponseDTO);
@@ -129,8 +133,34 @@ public class BookingServiceImpl extends GenericRsqlService<Booking, BookingRespo
     }
 
     @Override
-    public BookingResponseDTO cancelBooking(Integer bookingId, BookingCancelledBy cancelledBy) {
-        return null;
+    public BookingResponseDTO cancelBooking(Integer bookingId, Integer userId, CancelledBy cancelledBy) {
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new ResourceNotFoundException("Booking not found with ID: " + bookingId));
+        if (booking.getStatus() == BookingStatus.CANCELLED) {
+            throw new BookingAlreadyCancelledException("Booking is already cancelled.");
+        }
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + userId));
+        validateCancellationPermission(booking, user, cancelledBy);
+        booking.setStatus(BookingStatus.CANCELLED);
+        booking.setCancelledBy(cancelledBy);
+        booking.setCancelledAt(LocalDateTime.now());
+        Booking updatedBooking = bookingRepository.save(booking);
+        return bookingMapper.toBookingResponseDTO(updatedBooking);
+    }
+
+    private void validateCancellationPermission(Booking booking, User user, CancelledBy cancelledBy) {
+        boolean hasPermission = switch (cancelledBy) {
+            case CUSTOMER -> booking.getUser().getId().equals(user.getId());
+            case DRIVER -> booking.getDriver() != null &&
+                    booking.getDriver().getUser().getId().equals(user.getId());
+            case ADMIN -> user.getRole().equals(RoleStatus.ADMIN);
+            default -> false;
+        };
+
+        if (!hasPermission) {
+            throw new UnauthorizedException("Unauthorized cancellation attempt");
+        }
     }
 
     private void validateDriverAvailability(Driver driver, LocalDate date, LocalTime time) {
