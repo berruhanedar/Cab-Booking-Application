@@ -1,6 +1,7 @@
 package com.berru.app.cabbookingapplication.entity;
 
 import com.berru.app.cabbookingapplication.enums.BookingStatus;
+import com.berru.app.cabbookingapplication.enums.CancelledBy;
 import com.berru.app.cabbookingapplication.enums.VehicleType;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -9,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Data
@@ -64,4 +66,11 @@ public class Booking {
     @OneToOne(mappedBy = "booking", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     private Rating rating;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "cancelled_by")
+    private CancelledBy cancelledBy;
+
+    @Column(name = "cancelled_at")
+    private LocalDateTime cancelledAt;
 }
