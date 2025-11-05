@@ -1,7 +1,6 @@
 package com.berru.app.cabbookingapplication.controller;
 
 import com.berru.app.cabbookingapplication.dto.*;
-import com.berru.app.cabbookingapplication.enums.BookingCancelledBy;
 import com.berru.app.cabbookingapplication.enums.RoleStatus;
 import com.berru.app.cabbookingapplication.enums.UserStatus;
 import com.berru.app.cabbookingapplication.service.BookingService;
@@ -89,11 +88,4 @@ public class UserController {
         return ResponseEntity.ok(userResponseDTO);
     }
 
-    @PatchMapping("/{userId}/bookings/{bookingId}/cancel")
-    public ResponseEntity<BookingResponseDTO> cancelBookingByUser(
-            @PathVariable Integer userId,
-            @PathVariable Integer bookingId) {
-        BookingResponseDTO response = bookingService.cancelBooking(bookingId, BookingCancelledBy.CUSTOMER);
-        return ResponseEntity.ok(response);
-    }
 }

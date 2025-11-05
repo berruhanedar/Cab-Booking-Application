@@ -2,7 +2,7 @@ package com.berru.app.cabbookingapplication.service;
 
 import com.berru.app.cabbookingapplication.dto.BookingResponseDTO;
 import com.berru.app.cabbookingapplication.dto.NewBookingRequestDTO;
-import com.berru.app.cabbookingapplication.enums.BookingCancelledBy;
+import com.berru.app.cabbookingapplication.enums.CancelledBy;
 
 import java.util.List;
 
@@ -22,14 +22,6 @@ public interface BookingService {
 
     BookingResponseDTO getBookingById(Integer bookingId);
 
-    /**
-     * 8️⃣ Kullanıcı veya driver booking'i iptal edebilir.
-     * Status CANCELLED olur.
-     *
-     * @param bookingId İptal edilecek booking ID.
-     * @param cancelledBy "USER" veya "DRIVER" bilgisini içerir.
-     * @return Güncellenmiş booking bilgilerini içeren DTO.
-     */
-    BookingResponseDTO cancelBooking(Integer bookingId, BookingCancelledBy cancelledBy);
+    BookingResponseDTO cancelBooking(Integer bookingId, Integer userId, CancelledBy cancelledBy);
 
 }

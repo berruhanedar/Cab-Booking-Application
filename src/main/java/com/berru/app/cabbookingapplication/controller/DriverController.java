@@ -1,7 +1,6 @@
 package com.berru.app.cabbookingapplication.controller;
 
 import com.berru.app.cabbookingapplication.dto.*;
-import com.berru.app.cabbookingapplication.enums.BookingCancelledBy;
 import com.berru.app.cabbookingapplication.enums.DriverAvailability;
 import com.berru.app.cabbookingapplication.service.BookingService;
 import com.berru.app.cabbookingapplication.service.DriverService;
@@ -127,14 +126,6 @@ public class DriverController {
     @PutMapping("/bookings/{bookingId}/complete")
     public ResponseEntity<BookingResponseDTO> completeBooking(@PathVariable Integer bookingId) {
         BookingResponseDTO response = bookingService.completeBooking(bookingId);
-        return ResponseEntity.ok(response);
-    }
-
-    @PatchMapping("/{driverId}/bookings/{bookingId}/cancel")
-    public ResponseEntity<BookingResponseDTO> cancelBookingByDriver(
-            @PathVariable Integer driverId,
-            @PathVariable Integer bookingId) {
-        BookingResponseDTO response = bookingService.cancelBooking(bookingId, BookingCancelledBy.DRIVER);
         return ResponseEntity.ok(response);
     }
 

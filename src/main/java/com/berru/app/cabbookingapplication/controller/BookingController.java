@@ -2,7 +2,7 @@ package com.berru.app.cabbookingapplication.controller;
 
 import com.berru.app.cabbookingapplication.dto.BookingResponseDTO;
 import com.berru.app.cabbookingapplication.dto.NewBookingRequestDTO;
-import com.berru.app.cabbookingapplication.enums.BookingCancelledBy;
+import com.berru.app.cabbookingapplication.enums.CancelledBy;
 import com.berru.app.cabbookingapplication.service.BookingService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -47,23 +47,23 @@ public class BookingController {
     }
 
     @GetMapping("/driver/{driverId}")
-    public  ResponseEntity<List<BookingResponseDTO>> getBookingsByDriverId(@PathVariable Integer driverId) {
+    public ResponseEntity<List<BookingResponseDTO>> getBookingsByDriverId(@PathVariable Integer driverId) {
         List<BookingResponseDTO> bookingResponseDTOs = bookingService.getBookingsByDriverId(driverId);
         return ResponseEntity.ok(bookingResponseDTOs);
     }
 
     @GetMapping("/{bookingId}")
     public ResponseEntity<BookingResponseDTO> getBookingById(@PathVariable Integer bookingId) {
-       BookingResponseDTO bookingResponseDTO = bookingService.getBookingById(bookingId);
-       return ResponseEntity.ok(bookingResponseDTO);
+        BookingResponseDTO bookingResponseDTO = bookingService.getBookingById(bookingId);
+        return ResponseEntity.ok(bookingResponseDTO);
     }
 
-    @PutMapping("/{bookingId}/cancel")
+    @PatchMapping("/{bookingId}/cancel/{userId}")
     public ResponseEntity<BookingResponseDTO> cancelBooking(
             @PathVariable Integer bookingId,
-            @RequestParam("cancelledBy") BookingCancelledBy cancelledBy
-    ) {
-        BookingResponseDTO response = bookingService.cancelBooking(bookingId, cancelledBy);
+            @PathVariable Integer userId,
+            @RequestParam CancelledBy cancelledBy) {
+        BookingResponseDTO response = bookingService.cancelBooking(bookingId, userId, cancelledBy);
         return ResponseEntity.ok(response);
     }
 
