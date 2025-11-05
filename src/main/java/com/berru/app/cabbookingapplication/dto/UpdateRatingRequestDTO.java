@@ -9,9 +9,6 @@ import lombok.Data;
 @Data
 public class UpdateRatingRequestDTO {
 
-    @NotNull(message = "Rating ID cannot be null")
-    private Integer id;
-
     @NotNull(message = "Rating value cannot be null")
     @Min(value = 1, message = "Rating must be at least 1")
     @Max(value = 5, message = "Rating cannot exceed 5")
