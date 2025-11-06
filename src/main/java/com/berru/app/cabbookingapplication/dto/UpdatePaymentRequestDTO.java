@@ -1,5 +1,6 @@
 package com.berru.app.cabbookingapplication.dto;
 
+import com.berru.app.cabbookingapplication.enums.PaymentMethod;
 import com.berru.app.cabbookingapplication.enums.PaymentStatus;
 import com.berru.app.cabbookingapplication.enums.PaymentType;
 import jakarta.validation.constraints.*;
@@ -20,6 +21,8 @@ public class UpdatePaymentRequestDTO {
     private PaymentType type;
 
     private PaymentStatus status;
+
+    private PaymentMethod method;
 
     @Pattern(regexp = "^[A-Za-z0-9\\-]{6,50}$", message = "Transaction ID must be alphanumeric and between 6-50 characters")
     private String transactionId;

@@ -1,5 +1,7 @@
 package com.berru.app.cabbookingapplication.entity;
 
+import com.berru.app.cabbookingapplication.dto.NewPaymentRequestDTO;
+import com.berru.app.cabbookingapplication.enums.PaymentMethod;
 import com.berru.app.cabbookingapplication.enums.PaymentStatus;
 import com.berru.app.cabbookingapplication.enums.PaymentType;
 import jakarta.persistence.*;
@@ -22,6 +24,9 @@ public class Payment {
     @Enumerated(EnumType.STRING)
     private PaymentStatus status;
 
+    @Enumerated(EnumType.STRING)
+    private PaymentMethod method;
+
     private String transactionId;
 
     @ManyToOne
@@ -31,4 +36,5 @@ public class Payment {
     @OneToOne
     @JoinColumn(name = "booking_id")
     private Booking booking;
+
 }

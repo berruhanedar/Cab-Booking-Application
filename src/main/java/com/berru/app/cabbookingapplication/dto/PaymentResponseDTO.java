@@ -1,5 +1,6 @@
 package com.berru.app.cabbookingapplication.dto;
 
+import com.berru.app.cabbookingapplication.enums.PaymentMethod;
 import com.berru.app.cabbookingapplication.enums.PaymentStatus;
 import com.berru.app.cabbookingapplication.enums.PaymentType;
 import lombok.AllArgsConstructor;
@@ -20,6 +21,8 @@ public class PaymentResponseDTO {
     private PaymentType type;
 
     private PaymentStatus status;
+
+    private PaymentMethod method;
 
     private String transactionId;
 
