@@ -63,15 +63,31 @@ public class PaymentServiceImpl implements PaymentService {
                 .type(PaymentType.DEFAULT)
                 .transactionId(generateTransactionId())
                 .build();
-
         return processPayment(paymentRequestDTO);
     }
 
-
-
     @Override
     public PaymentResponseDTO refundPayment(Integer bookingId) {
-        return null;
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new ResourceNotFoundException("Booking not found with id " + bookingId));
+        Payment existingPayment = paymentRepository.findByBookingId(bookingId)
+                .orElseThrow(() -> new ResourceNotFoundException("No payment found for booking id " + bookingId));
+        if (existingPayment.getType() == PaymentType.REFUND) {
+            throw new IllegalStateException("Payment already refunded for booking id " + bookingId);
+        }
+        NewPaymentRequestDTO refundDTO = NewPaymentRequestDTO.builder()
+                .bookingId(bookingId)
+                .driverId(existingPayment.getDriver().getId())
+                .amount(-existingPayment.getAmount())
+                .method(existingPayment.getMethod())
+                .type(PaymentType.REFUND)
+                .transactionId("REF-" + existingPayment.getTransactionId())
+                .build();
+        Payment refundPayment = paymentMapper.toPayment(refundDTO);
+        refundPayment.setBooking(booking);
+        refundPayment.setDriver(existingPayment.getDriver());
+        Payment savedRefund = paymentRepository.save(refundPayment);
+        return paymentMapper.toPaymentResponseDTO(savedRefund);
     }
 
     @Override
@@ -101,4 +117,5 @@ public class PaymentServiceImpl implements PaymentService {
     private String generateTransactionId() {
         return "TXN-" + System.currentTimeMillis();
     }
+
 }
