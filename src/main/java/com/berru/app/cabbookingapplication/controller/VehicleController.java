@@ -35,7 +35,6 @@ public class VehicleController {
     public ResponseEntity<VehicleResponseDTO> getVehicleById(@PathVariable Integer id) {
         VehicleResponseDTO vehicleResponseDTO = vehicleService.getVehicleById(id);
         return ResponseEntity.status(HttpStatus.OK).body(vehicleResponseDTO);
-
     }
 
     @GetMapping("/plate/{plate}")
