@@ -91,8 +91,10 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public PaymentResponseDTO getPaymentDetails(Integer paymentId) {
-        return null;
+        Payment payment = paymentRepository.findById(paymentId).orElseThrow(() -> new ResourceNotFoundException("No payment found for payment id " + paymentId));
+        return paymentMapper.toPaymentResponseDTO(payment);
     }
 
     private Double calculateBookingAmount(Booking booking) {
