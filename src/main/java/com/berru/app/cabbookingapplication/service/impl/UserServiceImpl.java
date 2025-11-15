@@ -16,6 +16,7 @@ import com.berru.app.cabbookingapplication.service.base.GenericRsqlService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -137,6 +138,12 @@ public class UserServiceImpl extends GenericRsqlService<User, UserResponseDTO> i
         user.setStatus(newStatus);
         userRepository.save(user);
         return userMapper.toUserResponseDTO(user);
+    }
+
+    @Override
+    public User getUserByEmailAndStatus(String email, UserStatus status) {
+        return userRepository.findByEmailAndStatus(email, status)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
     private void validateNewUser(NewUserRequestDTO dto) {

@@ -1,6 +1,7 @@
 package com.berru.app.cabbookingapplication.service;
 
 import com.berru.app.cabbookingapplication.dto.*;
+import com.berru.app.cabbookingapplication.entity.User;
 import com.berru.app.cabbookingapplication.enums.UserStatus;
 import com.berru.app.cabbookingapplication.enums.RoleStatus;
 import org.springframework.stereotype.Service;
@@ -27,4 +28,7 @@ public interface UserService {
     UserResponseDTO changeUserRole(Integer targetUserId, RoleStatus newRole);
 
     UserResponseDTO changeUserStatus(Integer id, UserStatus newStatus);
+
+    User getUserByEmailAndStatus(String email, UserStatus status);
+
 }
