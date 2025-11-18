@@ -1,9 +1,15 @@
 package com.berru.app.cabbookingapplication.service.impl;
 
+import com.berru.app.cabbookingapplication.config.security.CustomUserDetails;
 import com.berru.app.cabbookingapplication.config.security.JwtTokenProvider;
 import com.berru.app.cabbookingapplication.dto.AuthResponseDTO;
 import com.berru.app.cabbookingapplication.dto.LoginRequestDTO;
 import com.berru.app.cabbookingapplication.dto.NewUserRequestDTO;
+import com.berru.app.cabbookingapplication.dto.UserResponseDTO;
+import com.berru.app.cabbookingapplication.entity.User;
+import com.berru.app.cabbookingapplication.enums.RoleStatus;
+import com.berru.app.cabbookingapplication.enums.UserStatus;
+import com.berru.app.cabbookingapplication.exception.DuplicateEmailException;
 import com.berru.app.cabbookingapplication.mapper.UserMapper;
 import com.berru.app.cabbookingapplication.repository.UserRepository;
 import com.berru.app.cabbookingapplication.service.AuthService;
@@ -30,8 +36,31 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponseDTO register(NewUserRequestDTO newUserRequestDTO) {
-        return null;
+        if (userRepository.existsByEmail(newUserRequestDTO.getEmail())) {
+            throw new DuplicateEmailException("Email already exists");
+        }
+
+        User user = userMapper.toUser(newUserRequestDTO);
+        user.setPassword(passwordEncoder.encode(newUserRequestDTO.getPassword()));
+        user.setStatus(UserStatus.ACTIVE);
+        user.setRole(RoleStatus.CUSTOMER);
+
+        User savedUser = userRepository.save(user);
+
+        CustomUserDetails userDetails = new CustomUserDetails(savedUser);
+
+        String accessToken = jwtTokenProvider.generateToken(userDetails);
+        String refreshToken = jwtTokenProvider.generateRefreshToken(userDetails);
+
+        UserResponseDTO userResponseDTO = userMapper.toUserResponseDTO(savedUser);
+
+        return AuthResponseDTO.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .user(userResponseDTO)
+                .build();
     }
+
 
     @Override
     public AuthResponseDTO login(LoginRequestDTO loginRequestDTO) {
