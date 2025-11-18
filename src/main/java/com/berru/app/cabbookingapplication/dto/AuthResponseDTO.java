@@ -1,14 +1,12 @@
 package com.berru.app.cabbookingapplication.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@Builder
 public class AuthResponseDTO {
 
     private String accessToken;
