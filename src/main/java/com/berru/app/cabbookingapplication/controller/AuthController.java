@@ -1,6 +1,7 @@
 package com.berru.app.cabbookingapplication.controller;
 
 import com.berru.app.cabbookingapplication.dto.AuthResponseDTO;
+import com.berru.app.cabbookingapplication.dto.LoginRequestDTO;
 import com.berru.app.cabbookingapplication.dto.NewUserRequestDTO;
 import com.berru.app.cabbookingapplication.service.AuthService;
 import jakarta.validation.Valid;
@@ -25,6 +26,12 @@ public class AuthController {
     public ResponseEntity<AuthResponseDTO> register(@RequestBody @Valid NewUserRequestDTO newUserRequestDTO) {
         AuthResponseDTO authResponseDTO = authService.register(newUserRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(authResponseDTO);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<AuthResponseDTO> login(@RequestBody @Valid LoginRequestDTO loginRequestDTO) {
+        AuthResponseDTO authResponseDTO = authService.login(loginRequestDTO);
+        return ResponseEntity.ok(authResponseDTO);
     }
 
 }
