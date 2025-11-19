@@ -92,6 +92,30 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponseDTO refreshToken(String refreshToken) {
-        return null;
+        if (refreshToken.startsWith("Bearer ")) {
+            refreshToken = refreshToken.substring(7);
+        }
+        String username = jwtTokenProvider.getUsernameFromToken(refreshToken);
+        User user = userRepository.findByEmailAndStatus(username, UserStatus.ACTIVE)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        CustomUserDetails userDetails = new CustomUserDetails(user);
+
+        if (!jwtTokenProvider.validateRefreshToken(refreshToken, userDetails)) {
+            throw new BadCredentialsException("Invalid refresh token");
+        }
+
+        String newAccessToken = jwtTokenProvider.generateToken(userDetails);
+
+        String newRefreshToken = jwtTokenProvider.generateRefreshToken(userDetails);
+
+        UserResponseDTO userResponseDTO = userMapper.toUserResponseDTO(user);
+
+        return AuthResponseDTO.builder()
+                .accessToken(newAccessToken)
+                .refreshToken(newRefreshToken)
+                .user(userResponseDTO)
+                .build();
     }
+
 }
