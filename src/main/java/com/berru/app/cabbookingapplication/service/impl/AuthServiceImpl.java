@@ -13,6 +13,8 @@ import com.berru.app.cabbookingapplication.exception.DuplicateEmailException;
 import com.berru.app.cabbookingapplication.mapper.UserMapper;
 import com.berru.app.cabbookingapplication.repository.UserRepository;
 import com.berru.app.cabbookingapplication.service.AuthService;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -64,7 +66,23 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponseDTO login(LoginRequestDTO loginRequestDTO) {
-        return null;
+        User user = userRepository.findByEmailAndStatus(loginRequestDTO.getEmail(), UserStatus.ACTIVE)
+                .orElseThrow(() -> new UsernameNotFoundException("Invalid email or password"));
+
+        if (!passwordEncoder.matches(loginRequestDTO.getPassword(), user.getPassword())) {
+            throw new BadCredentialsException("Invalid email or password");
+        }
+        CustomUserDetails userDetails = new CustomUserDetails(user);
+        String accessToken = jwtTokenProvider.generateToken(userDetails);
+        String refreshToken = jwtTokenProvider.generateRefreshToken(userDetails);
+
+        UserResponseDTO userResponseDTO = userMapper.toUserResponseDTO(user);
+
+        return AuthResponseDTO.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .user(userResponseDTO)
+                .build();
     }
 
     @Override
