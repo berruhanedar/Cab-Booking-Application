@@ -4,6 +4,7 @@ import com.berru.app.cabbookingapplication.dto.*;
 import com.berru.app.cabbookingapplication.enums.RoleStatus;
 import com.berru.app.cabbookingapplication.enums.UserStatus;
 import com.berru.app.cabbookingapplication.service.BookingService;
+import com.berru.app.cabbookingapplication.service.ContextService;
 import com.berru.app.cabbookingapplication.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/users")
@@ -18,10 +20,12 @@ public class UserController {
 
     private final UserService userService;
     private final BookingService bookingService;
+    private final ContextService contextService;
 
-    public UserController(UserService userService, BookingService bookingService) {
+    public UserController(UserService userService, BookingService bookingService, ContextService contextService) {
         this.userService = userService;
         this.bookingService = bookingService;
+        this.contextService = contextService;
     }
 
     @PostMapping
@@ -88,4 +92,13 @@ public class UserController {
         return ResponseEntity.ok(userResponseDTO);
     }
 
+    @GetMapping("/me")
+    public ResponseEntity<?> getCurrentUserInfo() {
+        Integer userId = contextService.getCurrentUserId();
+        String email = contextService.getCurrentUserEmail();
+        return ResponseEntity.ok(Map.of(
+                "id", userId,
+                "email", email
+        ));
+    }
 }
