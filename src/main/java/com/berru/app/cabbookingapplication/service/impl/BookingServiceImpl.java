@@ -11,6 +11,7 @@ import com.berru.app.cabbookingapplication.mapper.PaginationMapper;
 import com.berru.app.cabbookingapplication.repository.BookingRepository;
 import com.berru.app.cabbookingapplication.repository.DriverRepository;
 import com.berru.app.cabbookingapplication.repository.UserRepository;
+import com.berru.app.cabbookingapplication.service.BookingNotificationService;
 import com.berru.app.cabbookingapplication.service.BookingService;
 import com.berru.app.cabbookingapplication.service.base.GenericRsqlService;
 
@@ -32,9 +33,10 @@ public class BookingServiceImpl extends GenericRsqlService<Booking, BookingRespo
     private final UserRepository userRepository;
     private final BookingWorkflowService bookingWorkflowService;
     private final BookingValidationService bookingValidationService;
+    private final BookingNotificationService bookingNotificationService;
 
     public BookingServiceImpl(
-            BookingRepository bookingRepository, BookingWorkflowService bookingWorkflowService, BookingMapper bookingMapper, PaginationMapper paginationMapper, DriverRepository driverRepository, UserRepository userRepository, BookingValidationService bookingValidationService) {
+            BookingRepository bookingRepository, BookingWorkflowService bookingWorkflowService, BookingMapper bookingMapper, BookingNotificationService bookingNotificationService, PaginationMapper paginationMapper, DriverRepository driverRepository, UserRepository userRepository, BookingValidationService bookingValidationService) {
         super(bookingRepository, bookingMapper::toBookingResponseDTO);
         this.bookingRepository = bookingRepository;
         this.bookingMapper = bookingMapper;
@@ -43,6 +45,7 @@ public class BookingServiceImpl extends GenericRsqlService<Booking, BookingRespo
         this.userRepository = userRepository;
         this.bookingWorkflowService = bookingWorkflowService;
         this.bookingValidationService = bookingValidationService;
+        this.bookingNotificationService = bookingNotificationService;
     }
 
     @Override
@@ -57,6 +60,9 @@ public class BookingServiceImpl extends GenericRsqlService<Booking, BookingRespo
         booking.setDriver(driver);
         booking.setStatus(BookingStatus.PENDING);
         Booking bookingResult = bookingRepository.save(booking);
+
+        bookingNotificationService.notifyBookingCreated(bookingResult);
+
         return bookingMapper.toBookingResponseDTO(bookingResult);
     }
 
@@ -79,14 +85,21 @@ public class BookingServiceImpl extends GenericRsqlService<Booking, BookingRespo
         }
         booking.setStatus(BookingStatus.CONFIRMED);
         booking.setDriver(driver);
-        return bookingMapper.toBookingResponseDTO(bookingRepository.save(booking));
+
+        Booking saved = bookingRepository.save(booking);
+
+        bookingNotificationService.notifyBookingAccepted(saved);
+
+        return bookingMapper.toBookingResponseDTO(bookingRepository.save(saved));
     }
 
     @Override
     @Transactional
     public BookingResponseDTO completeBooking(Integer bookingId) {
         Booking booking = getBookingByIdEntity(bookingId);
-        return bookingWorkflowService.completeBookingFlow(booking);
+        BookingResponseDTO completedDto = bookingWorkflowService.completeBookingFlow(booking);
+        bookingNotificationService.notifyBookingCompleted(booking);
+        return completedDto;
     }
 
     @Override
