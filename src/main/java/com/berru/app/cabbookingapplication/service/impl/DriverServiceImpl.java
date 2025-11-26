@@ -193,8 +193,7 @@ public class DriverServiceImpl extends GenericRsqlService<Driver, DriverResponse
     public Double getAverageRatingByDriverId(Integer driverId) {
         Driver driver = driverRepository.findById(driverId)
                 .orElseThrow(() -> new ResourceNotFoundException("Driver not found with ID: " + driverId));
-        List<Rating> ratings = ratingRepository.findByDriver(driver);
-        Double average = ratingRepository.findAverageScoreByDriverId(driverId);
+        Double average = ratingRepository.findAverageRatingByDriverId(driverId);
         driver.setAverageRating(average);
         driverRepository.save(driver);
         return average;
