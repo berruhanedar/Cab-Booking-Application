@@ -1,7 +1,9 @@
 package com.berru.app.cabbookingapplication.dto;
 
 import jakarta.validation.constraints.*;
+import lombok.Data;
 
+@Data
 public class UpdateLocationRequestDTO {
 
     @NotNull(message = "Latitude cannot be null")
