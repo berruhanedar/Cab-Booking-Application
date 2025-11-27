@@ -141,10 +141,13 @@ public class DriverServiceImpl extends GenericRsqlService<Driver, DriverResponse
     public DriverResponseDTO updateDriverLocation(Integer id, UpdateLocationRequestDTO locationUpdate) {
         Driver driver = driverRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Driver not found with ID: " + id));
+
         locationMapper.updateEmbeddableFromDTO(locationUpdate, driver.getCurrentLocation());
+
         Driver updatedDriver = driverRepository.save(driver);
         return driverMapper.toDriverResponseDTO(updatedDriver);
     }
+
 
     @Override
     public DriverResponseDTO updateDriverAvailability(Integer driverId, DriverAvailability availability) {
