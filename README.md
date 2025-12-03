@@ -1,3 +1,16 @@
+[![Java](https://img.shields.io/badge/Java-21-red?style=flat&logo=openjdk)](https://www.oracle.com/java/)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-6DB33F?style=flat&logo=springboot)](https://spring.io/projects/spring-boot)
+[![Spring Security](https://img.shields.io/badge/Spring%20Security-Active-6DB33F?style=flat&logo=springsecurity)](https://spring.io/projects/spring-security)
+[![Hibernate](https://img.shields.io/badge/Hibernate-ORM-yellow?style=flat&logo=hibernate)](https://hibernate.org/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15+-blue?style=flat&logo=postgresql)](https://www.postgresql.org/)
+[![Maven](https://img.shields.io/badge/Maven-3.9.x-orange?style=flat&logo=apache-maven)](https://maven.apache.org/)
+[![MapStruct](https://img.shields.io/badge/MapStruct-Enabled-blueviolet?style=flat)](https://mapstruct.org/)
+[![Lombok](https://img.shields.io/badge/Lombok-Active-green?style=flat&logo=lombok)](https://projectlombok.org/)
+[![JWT](https://img.shields.io/badge/JWT-Auth-black?style=flat&logo=jsonwebtokens)](https://jwt.io/)
+[![Swagger](https://img.shields.io/badge/Swagger-OpenAPI-brightgreen?style=flat&logo=swagger)](https://swagger.io/)
+[![Docker](https://img.shields.io/badge/Docker-Supported-2496ED?style=flat&logo=docker)](https://www.docker.com/)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
 # 🚖 Cab Booking Application
 
 A **Java Spring Boot** based comprehensive cab booking application.  
