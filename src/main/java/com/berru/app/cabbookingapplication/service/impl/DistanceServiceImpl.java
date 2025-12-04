@@ -1,5 +1,6 @@
 package com.berru.app.cabbookingapplication.service.impl;
 
+import com.berru.app.cabbookingapplication.service.DistanceService;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -8,7 +9,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 
 @Service
-public class DistanceService {
+public class DistanceServiceImpl implements DistanceService {
 
     @Value("${google.maps.api.key}")
     private String apiKey;

@@ -8,17 +8,17 @@ import org.springframework.stereotype.Service;
 @Service
 public class FareCalculationServiceImpl implements FareCalculationService {
 
-    private final DistanceService distanceService;
+    private final DistanceServiceImpl distanceServiceImpl;
 
-    public FareCalculationServiceImpl(DistanceService distanceService) {
-        this.distanceService = distanceService;
+    public FareCalculationServiceImpl(DistanceServiceImpl distanceServiceImpl) {
+        this.distanceServiceImpl = distanceServiceImpl;
     }
 
     @Override
     public double calculateFare(Booking booking) {
         double baseFare = 50.0;
 
-        double distanceKm = distanceService.getDistanceInKm(
+        double distanceKm = distanceServiceImpl.getDistanceInKm(
                 booking.getFrom(),
                 booking.getTo()
         );
