@@ -32,11 +32,11 @@ public class BookingServiceImpl extends GenericRsqlService<Booking, BookingRespo
     private final DriverRepository driverRepository;
     private final UserRepository userRepository;
     private final BookingWorkflowService bookingWorkflowService;
-    private final BookingValidationService bookingValidationService;
+    private final BookingValidationServiceImpl bookingValidationServiceImpl;
     private final BookingNotificationService bookingNotificationService;
 
     public BookingServiceImpl(
-            BookingRepository bookingRepository, BookingWorkflowService bookingWorkflowService, BookingMapper bookingMapper, BookingNotificationService bookingNotificationService, PaginationMapper paginationMapper, DriverRepository driverRepository, UserRepository userRepository, BookingValidationService bookingValidationService) {
+            BookingRepository bookingRepository, BookingWorkflowService bookingWorkflowService, BookingMapper bookingMapper, BookingNotificationService bookingNotificationService, PaginationMapper paginationMapper, DriverRepository driverRepository, UserRepository userRepository, BookingValidationServiceImpl bookingValidationServiceImpl) {
         super(bookingRepository, bookingMapper::toBookingResponseDTO);
         this.bookingRepository = bookingRepository;
         this.bookingMapper = bookingMapper;
@@ -44,7 +44,7 @@ public class BookingServiceImpl extends GenericRsqlService<Booking, BookingRespo
         this.driverRepository = driverRepository;
         this.userRepository = userRepository;
         this.bookingWorkflowService = bookingWorkflowService;
-        this.bookingValidationService = bookingValidationService;
+        this.bookingValidationServiceImpl = bookingValidationServiceImpl;
         this.bookingNotificationService = bookingNotificationService;
     }
 
@@ -54,7 +54,7 @@ public class BookingServiceImpl extends GenericRsqlService<Booking, BookingRespo
                 .orElseThrow(() -> new ResourceNotFoundException("Driver not found with id " + newBookingRequestDTO.getDriverId()));
         User user = userRepository.findById(newBookingRequestDTO.getUserId())
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id " + newBookingRequestDTO.getUserId()));
-        bookingValidationService.validateDriverAvailability(driver, newBookingRequestDTO.getDate(), newBookingRequestDTO.getTime());
+        bookingValidationServiceImpl.validateDriverAvailability(driver, newBookingRequestDTO.getDate(), newBookingRequestDTO.getTime());
         Booking booking = bookingMapper.toBooking(newBookingRequestDTO);
         booking.setUser(user);
         booking.setDriver(driver);
