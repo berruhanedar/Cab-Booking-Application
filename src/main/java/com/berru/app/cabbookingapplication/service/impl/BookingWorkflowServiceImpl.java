@@ -8,6 +8,7 @@ import com.berru.app.cabbookingapplication.exception.InvalidBookingStateExceptio
 import com.berru.app.cabbookingapplication.exception.PaymentFailedException;
 import com.berru.app.cabbookingapplication.mapper.BookingMapper;
 import com.berru.app.cabbookingapplication.repository.BookingRepository;
+import com.berru.app.cabbookingapplication.service.BookingWorkflowService;
 import com.berru.app.cabbookingapplication.service.PaymentService;
 import com.berru.app.cabbookingapplication.service.RatingService;
 import org.springframework.stereotype.Service;
@@ -15,17 +16,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
-public class BookingWorkflowService {
+public class BookingWorkflowServiceImpl implements BookingWorkflowService {
 
     private final BookingRepository bookingRepository;
     private final BookingMapper bookingMapper;
     private final PaymentService paymentService;
     private final RatingService ratingService;
 
-    public BookingWorkflowService(BookingRepository bookingRepository,
-                                  BookingMapper bookingMapper,
-                                  PaymentService paymentService,
-                                  RatingService ratingService) {
+    public BookingWorkflowServiceImpl(BookingRepository bookingRepository,
+                                      BookingMapper bookingMapper,
+                                      PaymentService paymentService,
+                                      RatingService ratingService) {
         this.bookingRepository = bookingRepository;
         this.bookingMapper = bookingMapper;
         this.paymentService = paymentService;

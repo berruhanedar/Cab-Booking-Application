@@ -31,19 +31,19 @@ public class BookingServiceImpl extends GenericRsqlService<Booking, BookingRespo
     private final PaginationMapper paginationMapper;
     private final DriverRepository driverRepository;
     private final UserRepository userRepository;
-    private final BookingWorkflowService bookingWorkflowService;
+    private final BookingWorkflowServiceImpl bookingWorkflowServiceImpl;
     private final BookingValidationServiceImpl bookingValidationServiceImpl;
     private final BookingNotificationService bookingNotificationService;
 
     public BookingServiceImpl(
-            BookingRepository bookingRepository, BookingWorkflowService bookingWorkflowService, BookingMapper bookingMapper, BookingNotificationService bookingNotificationService, PaginationMapper paginationMapper, DriverRepository driverRepository, UserRepository userRepository, BookingValidationServiceImpl bookingValidationServiceImpl) {
+            BookingRepository bookingRepository, BookingWorkflowServiceImpl bookingWorkflowServiceImpl, BookingMapper bookingMapper, BookingNotificationService bookingNotificationService, PaginationMapper paginationMapper, DriverRepository driverRepository, UserRepository userRepository, BookingValidationServiceImpl bookingValidationServiceImpl) {
         super(bookingRepository, bookingMapper::toBookingResponseDTO);
         this.bookingRepository = bookingRepository;
         this.bookingMapper = bookingMapper;
         this.paginationMapper = paginationMapper;
         this.driverRepository = driverRepository;
         this.userRepository = userRepository;
-        this.bookingWorkflowService = bookingWorkflowService;
+        this.bookingWorkflowServiceImpl = bookingWorkflowServiceImpl;
         this.bookingValidationServiceImpl = bookingValidationServiceImpl;
         this.bookingNotificationService = bookingNotificationService;
     }
@@ -97,7 +97,7 @@ public class BookingServiceImpl extends GenericRsqlService<Booking, BookingRespo
     @Transactional
     public BookingResponseDTO completeBooking(Integer bookingId) {
         Booking booking = getBookingByIdEntity(bookingId);
-        BookingResponseDTO completedDto = bookingWorkflowService.completeBookingFlow(booking);
+        BookingResponseDTO completedDto = bookingWorkflowServiceImpl.completeBookingFlow(booking);
         bookingNotificationService.notifyBookingCompleted(booking);
         return completedDto;
     }
