@@ -24,5 +24,4 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Integer>, JpaS
 
     List<Vehicle> findByDriverId(Integer driverId);
 
-
 }

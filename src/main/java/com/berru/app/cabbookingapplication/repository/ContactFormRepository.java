@@ -9,5 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface ContactFormRepository extends JpaRepository<ContactForm, Integer>, JpaSpecificationExecutor<ContactForm> {
+
     Optional<ContactForm> findByEmail(String email);
+
 }
