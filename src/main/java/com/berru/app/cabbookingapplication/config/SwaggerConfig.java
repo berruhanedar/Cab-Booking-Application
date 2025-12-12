@@ -24,11 +24,6 @@ public class SwaggerConfig implements WebMvcConfigurer {
                 .build().apiInfo(apiInfoMetaData());
     }
 
-    /**
-     * API bilgilerini yapılandırır.
-     *
-     * @return API bilgileri
-     */
     private ApiInfo apiInfoMetaData() {
         return new ApiInfoBuilder()
                 .title("Tutorials")
